@@ -41,7 +41,7 @@ Após ter o **Node** instalado, instale as dependências contidas nos arquivos `
 $ npm install 
 ```
 
-Para abrir a documentação da aplicação e conseguir interagir com as rotas é só acessar o endereço http://localhost:3333/api-docs/ com a aplicação rodando na máquina local.
+Para abrir a documentação da aplicação e conseguir interagir com as rotas é só acessar o endereço http://localhost:8080/api-docs/ com a aplicação rodando na máquina local.
 
 ## **:star2: COLABORADOR**
 
