@@ -1,0 +1,284 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "UFCity",
+        "description": "Documentação do projeto.",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Davi Silva da Penha",
+            "url": "https://github.com/Spinnafre",
+            "email": "davispenha@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/news": {
+            "get": {
+                "tags": [
+                    "News"
+                ],
+                "summary": "List news from https://www.ufc.br/noticias",
+                "description": "List news",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "show",
+                        "description": "Quantity of news",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum":["5","10","15","20","25","30","50","100","Tudo"],
+                            "default":"5"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "text": {
+                                                "type": "string"
+                                            },
+                                            "link": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "example": {
+                                            "text": "  Com secretário do MEC, reitor representa universidades públicas brasileiras em conferência da UNESCO 20/05/2022",
+                                            "link": "https://www.ufc.br/noticias/16958-com-secretario-do-mec-reitor-representa-universidades-publicas-brasileiras-em-conferencia-da-unesc"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Internal Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "msg": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "example": {
+                                        "msg": "Error message"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ru_ufc/byDay": {
+            "get": {
+                "tags": [
+                    "RU UFC"
+                ],
+                "summary": "List meat by day",
+                "description": "List meat by day",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "day",
+                        "description": "Date",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default":"2022-05-13"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "type": {
+                                                "type": "string"
+                                            },
+                                            "meat": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "title": {
+                                                            "type": "string"
+                                                        },
+                                                        "options": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "example": {
+                                            "type": "desjejum",
+                                            "meat": [
+                                                {
+                                                    "title": "Bebidas",
+                                                    "options": "CaféLeite Quente/Frio (Contém Lactose)Leite de SojaSuco de Acerola"
+                                                },
+                                                {
+                                                    "title": "Pães",
+                                                    "options": "Pão Carioca (Contém Glúten)Pão Sovado (Contém Glúten)"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    }
+                }
+            }
+        },
+        "/ru_ufc/getUserBalance": {
+            "get": {
+                "tags": [
+                    "RU UFC"
+                ],
+                "summary": "List user RU balance",
+                "description": "List user RU balance",
+                "parameters": [
+                    {
+                        "name": "card_number",
+                        "in": "query",
+                        "description": "User card of RU",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "registry_number",
+                        "in": "query",
+                        "description": "User registry number of UFC",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "user_info": {
+                                                "type":"object",
+                                                "properties":{
+                                                    "user_name":"string",
+                                                    "user_credit":"string"
+                                                }
+                                            },
+                                            "transactions": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "date":"string",
+                                                        "type":"string",
+                                                        "details":"string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "example": {
+                                        "user_info": {
+                                            "user_name": "DAVI SILVA DA PENHA",
+                                            "user_credits": "3"
+                                        },
+                                        "transactions": [
+                                            {
+                                                "date": "20-05-2022 17:17:40",
+                                                "type": "  Utilização do Cartão     ",
+                                                "details": "   Refeição: Jantar      "
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Não foi possível buscar usuário",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "msg": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "example": {
+                                        "msg": "Não foi possível buscar usuário"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "msg": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "example": {
+                                        "msg": "Error message"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {}
+}
