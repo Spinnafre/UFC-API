@@ -1,4 +1,4 @@
-# myCommerce
+# UFCity
 
 <h3 align="center">
 
