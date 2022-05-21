@@ -26,9 +26,8 @@ Projeto em desenvolvimento
 
 ### Configurações Iniciais
 
-Você precisa verificar se foi criado o banco de dados com nome 'myCommerce'
 
-Depois de ter criado o banco de dados, é necessário clonar o repositório na máquina:
+Clonar o repositório na máquina:
 ```sh
 $ git clone https://github.com/Spinnafre/UFCity.git
 ```
