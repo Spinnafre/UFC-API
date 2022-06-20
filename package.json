@@ -1,0 +1,30 @@
+{
+  "name": "Backend",
+  "email": "davispenha@gmail.com",
+  "version": "1.0.0",
+  "description": "Servidor da aplicação UFCity",
+  "main": "src/shared/infra/http/app.js",
+  "scripts": {
+    "start": "npx nodemon --exec node src/shared/infra/http/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Spinnafre/UFCity.git"
+  },
+  "keywords": [],
+  "author": "Spinnafre (Davi Silva da Penha)",
+  "bugs": {
+    "url": "https://github.com/Spinnafre/UFCity/issues"
+  },
+  "homepage": "https://github.com/Spinnafre/UFCity#readme",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1",
+    "puppeteer": "^14.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16",
+    "swagger-ui-express": "^4.4.0"
+  }
+}
