@@ -3,7 +3,7 @@ const puppeteer = require("puppeteer");
 class ShowHighlightsEventsUseCase {
     async execute() {
         try {
-          const browser = await puppeteer.launch();
+          const browser = await puppeteer.launch({args:['--no-sandbox']});
           const page = await browser.newPage();
           await page.setDefaultNavigationTimeout(60000);
           await page.goto("https://agenda.ufc.br/");
