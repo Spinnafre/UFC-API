@@ -5,7 +5,8 @@
   "description": "Servidor da aplicação UFCity",
   "main": "src/shared/infra/http/app.js",
   "scripts": {
-    "start": "npx nodemon --exec node src/shared/infra/http/server.js",
+    "start": "node src/shared/infra/http/server.js",
+    "dev": "npx nodemon --exec node src/shared/infra/http/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
