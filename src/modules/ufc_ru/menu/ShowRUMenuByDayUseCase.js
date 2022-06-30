@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer');
 class ShowRUMenuByDayUseCase {
     async execute(day) {
         try {
-            const browser = await puppeteer.launch();
+            const browser = await puppeteer.launch({args:['--no-sandbox']});
             const page = await browser.newPage();
             await page.goto(`https://www.ufc.br/restaurante/cardapio/1-restaurante-universitario-de-fortaleza/${day}`);
         

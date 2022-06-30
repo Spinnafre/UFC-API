@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer');
 class ShowNewsUseCase {
     async execute(pageNumber=10) {
         try {
-            const browser = await puppeteer.launch();
+            const browser = await puppeteer.launch({args:['--no-sandbox']});
             const page = await browser.newPage();
             await page.goto(`https://www.ufc.br/noticias?start=${pageNumber}`);
             page.once('load', () => console.log('Página de notícias carregada'));

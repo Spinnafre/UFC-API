@@ -10,7 +10,7 @@ class ShowFilteredEventsUseCase {
     campus = '',
   }) {
     try {
-      const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({args:['--no-sandbox']});
       const page = await browser.newPage();
       await page.setDefaultNavigationTimeout(60000);
       const url=`https://agenda.ufc.br/eventos/lista/?tribe-bar-date=${date}&tribe-bar-date-day=${day}&tribe-bar-search=${keyWord}&tribe-bar-campus=${campus}&tribe-bar-categoria=${category}&tribe-bar-area=${area}`
