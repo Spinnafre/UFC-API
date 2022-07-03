@@ -1,15 +1,15 @@
 const puppeteer = require('puppeteer');
 
 
-class ShowNewsUseCase {
+class ShowContestsAndSelectionsUseCase {
     async execute(pageNumber=10,title=null) {
         try {
             const browser = await puppeteer.launch({args:['--no-sandbox']});
             const page = await browser.newPage();
             page.setDefaultNavigationTimeout(30000);
-            console.log(`https://www.ufc.br/noticias/noticias-de-2022?start=${pageNumber}`)
-            await page.goto(`https://www.ufc.br/noticias/noticias-de-2022?start=${pageNumber}`);
-            page.once('load', () => console.log('Página de notícias carregada'));
+            console.log(`https://www.ufc.br/noticias/noticias-e-editais-de-concursos-e-selecoes?start=${pageNumber}`)
+            await page.goto(`https://www.ufc.br/noticias/noticias-e-editais-de-concursos-e-selecoes?start=${pageNumber}`);
+            page.once('load', () => console.log('Página de Concursos e seleções carregada'));
 
             //Se passar title significa que irá pesquisar apenas por título
             //evaluateHandle => Melhor forma e mais segura de recuperar elementos da DOM
@@ -35,7 +35,7 @@ class ShowNewsUseCase {
 
             const listras = await page.$(".listras")
             if(!listras){
-                throw "Não foi possível carregar notícias"
+                throw "Não foi possível carregar notícias de Editar de Concursos e Seleções"
             }
 
 
@@ -70,6 +70,6 @@ class ShowNewsUseCase {
 }
 
 module.exports = {
-    ShowNewsUseCase
+    ShowContestsAndSelectionsUseCase
 }
 
