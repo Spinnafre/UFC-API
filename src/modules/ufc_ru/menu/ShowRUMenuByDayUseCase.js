@@ -7,7 +7,7 @@ class ShowRUMenuByDayUseCase {
             const browser = await puppeteer.launch({args:['--no-sandbox']});
             const page = await browser.newPage();
             await page.goto(`https://www.ufc.br/restaurante/cardapio/1-restaurante-universitario-de-fortaleza/${day}`);
-        
+            page.setDefaultNavigationTimeout(30000);
             const typesOfMeat=await page.evaluate(()=>{
                 const types= document.querySelector(".c-cardapios")
                 const tagTitles=Array.from(types.getElementsByTagName("h3"))
@@ -27,11 +27,7 @@ class ShowRUMenuByDayUseCase {
                     const meat=await page.$eval(selector,(table)=>{
                         function removeBlanksLines(text) {
                             const allLines = text.split("\n");
-                            const withoutBlankLinesandMarks = allLines.map((line) => {
-                                return line.trim()
-                            });
-                        
-                            return withoutBlankLinesandMarks.join(" ")
+                            return allLines.join(", ")
                         }
 
                         let result=[]
@@ -39,8 +35,8 @@ class ShowRUMenuByDayUseCase {
                         let rows=Array.from(table.getElementsByTagName("tr"))
     
                         for(let row of rows){
-                            let title=removeBlanksLines(row.firstElementChild.textContent)
-                            let options=removeBlanksLines(row.lastElementChild.textContent)
+                            let title=row.firstElementChild.textContent.trim()
+                            let options=removeBlanksLines(row.lastElementChild.innerText.trim())
                             result.push({
                                 title,
                                 options

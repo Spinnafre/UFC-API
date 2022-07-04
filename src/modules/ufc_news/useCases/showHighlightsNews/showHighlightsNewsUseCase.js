@@ -8,7 +8,7 @@ class ShowHighlightsNewsUseCase {
             const page = await browser.newPage();
             await page.goto('https://www.ufc.br');
             page.once('load', () => console.log('Page inicial da UFC carregada com sucesso!'));
-    
+            page.setDefaultNavigationTimeout(30000);
             await page.waitForSelector("#conteudo")
     
             const content = await page.$("#conteudo > div.ten.columns")
