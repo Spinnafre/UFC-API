@@ -46,7 +46,7 @@ class ShowHighlightsNewsUseCase {
                     //descricao
                     const description=item.querySelector(".descricao").textContent
                     //img
-                    const img=item.querySelector(".img").src
+                    const img=item.querySelector(".img")?item.querySelector(".img").src:''
     
                     result.push({
                         img,

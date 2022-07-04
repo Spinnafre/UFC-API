@@ -5,7 +5,7 @@ class ShowHighlightsEventsUseCase {
         try {
           const browser = await puppeteer.launch({args:['--no-sandbox']});
           const page = await browser.newPage();
-          await page.setDefaultNavigationTimeout(60000);
+          page.setDefaultNavigationTimeout(15000);
           await page.goto("https://agenda.ufc.br/");
           page.once("load", () =>
             console.log("Page inicial de EVENTOS carregada com sucesso!")

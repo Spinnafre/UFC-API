@@ -5,7 +5,7 @@ class ShowEventsPerPageUseCase {
     try {
       const browser = await puppeteer.launch({args:['--no-sandbox']});
       const page = await browser.newPage();
-      await page.setDefaultNavigationTimeout(60000);
+      page.setDefaultNavigationTimeout(15000);
       await page.goto(
         `https://agenda.ufc.br/eventos/lista/?tribe_event_display=list&tribe_paged=${pageNumber}`
       );

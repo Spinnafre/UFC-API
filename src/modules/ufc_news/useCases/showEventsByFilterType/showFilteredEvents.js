@@ -12,11 +12,11 @@ class ShowFilteredEventsUseCase {
     try {
       const browser = await puppeteer.launch({args:['--no-sandbox']});
       const page = await browser.newPage();
-      await page.setDefaultNavigationTimeout(60000);
+      page.setDefaultNavigationTimeout(10000);
       const url=`https://agenda.ufc.br/eventos/lista/?tribe-bar-date=${date}&tribe-bar-date-day=${day}&tribe-bar-search=${keyWord}&tribe-bar-campus=${campus}&tribe-bar-categoria=${category}&tribe-bar-area=${area}`
       await page.goto(url);
 
-      console.log(url)
+      console.log('filtered events ',url)
 
       page.once("load", () =>
         console.log("Page de EVENTOS carregada com sucesso!")
@@ -141,7 +141,7 @@ class ShowFilteredEventsUseCase {
         )
       );
 
-      
+      await page.close()
       await browser.close();
 
       return formattedItems;
