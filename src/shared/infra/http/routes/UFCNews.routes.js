@@ -6,11 +6,16 @@ const showFilteredEventsController=require("../../../../modules/ufc_news/useCase
 const showMainEventsController=require("../../../../modules/ufc_news/useCases/showMainEvents")
 const showEventsPerPageController=require("../../../../modules/ufc_news/useCases/showEventsPerPage")
 const showContestsAndSelectionsController=require("../../../../modules/ufc_news/useCases/showContestsAndSelections")
+const showNewsByDomainController=require("../../../../modules/ufc_news/useCases/getNewsByDomain")
 
 const router=Router()
 
 router.get('/',(req,res)=>{
     return showNewsController().handle(req,res)
+})
+
+router.get('/all',(req,res)=>{
+    return showNewsByDomainController().handle(req,res)
 })
 
 router.get('/contestsAndSelections',(req,res)=>{

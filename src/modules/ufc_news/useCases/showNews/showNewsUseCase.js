@@ -9,6 +9,7 @@ class ShowNewsUseCase {
             page.setDefaultNavigationTimeout(30000);
             console.log(`https://www.ufc.br/noticias/noticias-de-2022?start=${pageNumber}`)
             await page.goto(`https://www.ufc.br/noticias/noticias-de-2022?start=${pageNumber}`);
+            
             page.once('load', () => console.log('Página de notícias carregada'));
 
             //Se passar title significa que irá pesquisar apenas por título

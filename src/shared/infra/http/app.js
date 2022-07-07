@@ -3,6 +3,8 @@ const RURouter = require("./routes/RU.routes");
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("../../../swagger.json");
 
+
+
 const app = require("express")();
 
 app.use("/news", UFCNewsRouter);
