@@ -19,7 +19,7 @@ class ShowHighlightsNewsUseCase {
                 const result=[]
                 const items= highlightNews.querySelectorAll(".item")
                 items.forEach(item=>{
-                    let thumbnailUrl=item.querySelector(".thumb").href
+                    let thumbnailUrl=item.querySelector(".thumb>.img").src
                     let link= item.querySelector(".link").href
                     result.push({
                         link,
