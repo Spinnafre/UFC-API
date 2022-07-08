@@ -15,7 +15,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 //Não deixar heroku pôr o app para dormir
 setInterval(function() {
-  http.get('http://localhost:8080/news/ping')
+  http.get('https://ufcity.herokuapp.com/news/ping')
 }, 300000); // every 5 minutes (300000)
 
 process.on('uncaughtException',(err)=>{
