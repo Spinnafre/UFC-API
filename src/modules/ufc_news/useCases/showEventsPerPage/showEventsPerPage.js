@@ -1,13 +1,18 @@
-const puppeteer = require("puppeteer");
+const { browserOptions, timeoutToRequest } = require("../../../../config/puppeteer");
 
 class ShowEventsPerPageUseCase {
+  constructor(puppeteer) {
+    this.scrapper = puppeteer
+  }
   async execute(pageNumber) {
     try {
-      const browser = await puppeteer.launch({headless: true,args:['--no-sandbox','--disable-setuid-sandbox']});
+      const browser = await this.scrapper.launch(browserOptions);
       const page = await browser.newPage();
-      page.setDefaultNavigationTimeout(15000);
       await page.goto(
-        `https://agenda.ufc.br/eventos/lista/?tribe_event_display=list&tribe_paged=${pageNumber}`
+        `https://agenda.ufc.br/eventos/lista/?tribe_event_display=list&tribe_paged=${pageNumber}`,
+        {
+          timeout:timeoutToRequest
+        }
       );
 
       page.once("load", () =>
@@ -21,7 +26,7 @@ class ShowEventsPerPageUseCase {
         ".tribe-events-loop .type-tribe_events"
       );
 
-      if(!tribeEventsContainer.length){
+      if (!tribeEventsContainer.length) {
         await browser.close();
         return []
       }
@@ -133,16 +138,16 @@ class ShowEventsPerPageUseCase {
         )
       );
 
-      
+
       await browser.close();
 
       return formattedItems;
     } catch (error) {
-      if (error instanceof puppeteer.errors.TimeoutError) {
-        throw new Error("[TIMEOUT] - "+error)
+      if (error instanceof this.scrapper.errors.TimeoutError) {
+        throw new Error("[TIMEOUT] - " + error)
       }
       throw new Error(error)
-      
+
     }
   }
 }

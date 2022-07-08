@@ -1,13 +1,19 @@
-const puppeteer = require('puppeteer');
+const { browserOptions, timeoutToRequest } = require('../../../config/puppeteer');
 
 
 class ShowRUMenuByDayUseCase {
+    constructor(puppeteer){
+        this.scrapper=puppeteer
+    }
     async execute(day) {
+        
         try {
-            const browser = await puppeteer.launch({args:['--no-sandbox']});
+            const browser = await this.scrapper.launch(browserOptions);
             const page = await browser.newPage();
-            await page.goto(`https://www.ufc.br/restaurante/cardapio/1-restaurante-universitario-de-fortaleza/${day}`);
-            page.setDefaultNavigationTimeout(30000);
+            await page.goto(`https://www.ufc.br/restaurante/cardapio/1-restaurante-universitario-de-fortaleza/${day}`,{
+                timeout:timeoutToRequest
+            });
+
             const typesOfMeat=await page.evaluate(()=>{
                 const types= document.querySelector(".c-cardapios")
                 const tagTitles=Array.from(types.getElementsByTagName("h3"))

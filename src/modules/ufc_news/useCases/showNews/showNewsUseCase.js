@@ -1,14 +1,16 @@
-const puppeteer = require('puppeteer');
-
-
+const { browserOptions, timeoutToRequest } = require('../../../../config/puppeteer');
 class ShowNewsUseCase {
+    constructor(puppeteer){
+        this.scrapper=puppeteer
+    }
     async execute(pageNumber=10,title=null) {
         try {
-            const browser = await puppeteer.launch({args:['--no-sandbox','--disable-setuid-sandbox']});
+            const browser = await this.scrapper.launch(browserOptions);
             const page = await browser.newPage();
-            page.setDefaultNavigationTimeout(30000);
             console.log(`https://www.ufc.br/noticias/noticias-de-2022?start=${pageNumber}`)
-            await page.goto(`https://www.ufc.br/noticias/noticias-de-2022?start=${pageNumber}`);
+            await page.goto(`https://www.ufc.br/noticias/noticias-de-2022?start=${pageNumber}`,{
+                timeout:timeoutToRequest
+            });
             
             page.once('load', () => console.log('Página de notícias carregada'));
 
@@ -62,7 +64,7 @@ class ShowNewsUseCase {
             await browser.close();
             return links
         } catch (error) {
-            if (error instanceof puppeteer.errors.TimeoutError) {
+            if (error instanceof this.scrapper.errors.TimeoutError) {
                 throw new Error("[TIMEOUT] - ",error)
             }
             throw new Error(error)

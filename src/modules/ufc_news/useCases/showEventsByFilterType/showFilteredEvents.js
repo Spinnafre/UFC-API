@@ -1,22 +1,27 @@
-const puppeteer = require("puppeteer");
+
+const { browserOptions, timeoutToRequest } = require("../../../../config/puppeteer");
 
 class ShowFilteredEventsUseCase {
+  constructor(puppeteer) {
+    this.scrapper = puppeteer
+  }
   async execute({
     date = '',
-    day ='',
+    day = '',
     keyWord = '',
     area = '',
     category = '',
     campus = '',
   }) {
     try {
-      const browser = await puppeteer.launch({args:['--no-sandbox']});
+      const browser = await this.scrapper.launch(browserOptions);
       const page = await browser.newPage();
-      page.setDefaultNavigationTimeout(10000);
-      const url=`https://agenda.ufc.br/eventos/lista/?tribe-bar-date=${date}&tribe-bar-date-day=${day}&tribe-bar-search=${keyWord}&tribe-bar-campus=${campus}&tribe-bar-categoria=${category}&tribe-bar-area=${area}`
-      await page.goto(url);
+      const url = `https://agenda.ufc.br/eventos/lista/?tribe-bar-date=${date}&tribe-bar-date-day=${day}&tribe-bar-search=${keyWord}&tribe-bar-campus=${campus}&tribe-bar-categoria=${category}&tribe-bar-area=${area}`
+      await page.goto(url,{
+        timeout:timeoutToRequest
+      });
 
-      console.log('filtered events ',url)
+      console.log('filtered events ', url)
 
       page.once("load", () =>
         console.log("Page de EVENTOS carregada com sucesso!")
@@ -29,7 +34,7 @@ class ShowFilteredEventsUseCase {
         ".tribe-events-loop .type-tribe_events"
       );
 
-      if(!tribeEventsContainer.length){
+      if (!tribeEventsContainer.length) {
         await browser.close();
         return []
       }
@@ -146,7 +151,7 @@ class ShowFilteredEventsUseCase {
 
       return formattedItems;
     } catch (error) {
-      if (error instanceof puppeteer.errors.TimeoutError) {
+      if (error instanceof this.scrapper.errors.TimeoutError) {
         throw new Error("[TIMEOUT] - " + error);
       }
       throw new Error(error);

@@ -14,6 +14,11 @@ router.get('/',(req,res)=>{
     return showNewsController().handle(req,res)
 })
 
+router.get('/ping',(req,res)=>{
+    res.json({msg:'ok'})
+    return res.end()
+})
+
 router.get('/all',(req,res)=>{
     return showNewsByDomainController().handle(req,res)
 })

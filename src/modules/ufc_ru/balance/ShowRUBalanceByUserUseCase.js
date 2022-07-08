@@ -1,12 +1,17 @@
-const puppeteer = require('puppeteer');
+const { browserOptions, timeoutToRequest } = require('../../../config/puppeteer');
 
 class ShowRUBalanceByUserUseCase {
+    constructor(puppeteer){
+        this.scrapper=puppeteer
+    }
     async execute(input_card_number,input_registry_number) {
         console.log(input_card_number,input_registry_number)
         try {
-            const browser = await puppeteer.launch({headless: true,args:['--no-sandbox','--disable-setuid-sandbox']});
+            const browser = await this.scrapper.launch(browserOptions);
             const page = await browser.newPage();
-            await page.goto('https://si3.ufc.br/public/iniciarConsultaSaldo.do');
+            await page.goto('https://si3.ufc.br/public/iniciarConsultaSaldo.do',{
+                timeout:timeoutToRequest
+            });
     
             /** 
              payload: 

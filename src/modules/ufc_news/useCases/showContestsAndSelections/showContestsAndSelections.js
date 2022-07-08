@@ -1,14 +1,16 @@
-const puppeteer = require('puppeteer');
-
-
+const { browserOptions, timeoutToRequest } = require('../../../../config/puppeteer');
 class ShowContestsAndSelectionsUseCase {
+    constructor(puppeteer){
+        this.scrapper=puppeteer
+    }
     async execute(pageNumber=10,title=null) {
         try {
-            const browser = await puppeteer.launch({headless: true,args:['--no-sandbox','--disable-setuid-sandbox']});
+            const browser = await this.scrapper.launch(browserOptions);
             const page = await browser.newPage();
-            page.setDefaultNavigationTimeout(30000);
             console.log(`https://www.ufc.br/noticias/noticias-e-editais-de-concursos-e-selecoes?start=${pageNumber}`)
-            await page.goto(`https://www.ufc.br/noticias/noticias-e-editais-de-concursos-e-selecoes?start=${pageNumber}`);
+            await page.goto(`https://www.ufc.br/noticias/noticias-e-editais-de-concursos-e-selecoes?start=${pageNumber}`,{
+                timeout:timeoutToRequest
+            });
             page.once('load', () => console.log('Página de Concursos e seleções carregada'));
 
             //Se passar title significa que irá pesquisar apenas por título
@@ -61,7 +63,7 @@ class ShowContestsAndSelectionsUseCase {
             await browser.close();
             return links
         } catch (error) {
-            if (error instanceof puppeteer.errors.TimeoutError) {
+            if (error instanceof this.scrapper.errors.TimeoutError) {
                 throw new Error("[TIMEOUT] - ",error)
             }
             throw new Error(error)

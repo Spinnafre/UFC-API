@@ -1,14 +1,18 @@
-const puppeteer = require('puppeteer');
+const { browserOptions, timeoutToRequest } = require('../../../../config/puppeteer');
 
 
 class ShowHighlightsNewsUseCase {
+    constructor(puppeteer){
+        this.scrapper=puppeteer
+    }
     async execute() {
         try {
-            const browser = await puppeteer.launch({args:['--no-sandbox','--disable-setuid-sandbox']});
+            const browser = await this.scrapper.launch(browserOptions);
             const page = await browser.newPage();
-            await page.goto('https://www.ufc.br');
+            await page.goto('https://www.ufc.br',{
+                timeout:timeoutToRequest
+            });
             page.once('load', () => console.log('Page inicial da UFC carregada com sucesso!'));
-            page.setDefaultNavigationTimeout(30000);
             await page.waitForSelector("#conteudo")
     
             const content = await page.$("#conteudo > div.ten.columns")
@@ -87,7 +91,7 @@ class ShowHighlightsNewsUseCase {
             return news
         } catch (error) {
             console.log(error.message)
-            if (error instanceof puppeteer.errors.TimeoutError) {
+            if (error instanceof this.scrapper.errors.TimeoutError) {
                 return new Error('Falha ao buscar notícia do site da UFC ',error.message)
             }
         }

@@ -1,12 +1,17 @@
-const puppeteer = require("puppeteer");
+const { browserOptions, timeoutToRequest } = require("../../../../config/puppeteer");
 
 class ShowHighlightsEventsUseCase {
+    constructor(puppeteer){
+      this.scrapper=puppeteer
+    }
     async execute() {
         try {
-          const browser = await puppeteer.launch({headless: true,args:['--no-sandbox','--disable-setuid-sandbox']});
+          const browser = await this.scrapper.launch(browserOptions);
           const page = await browser.newPage();
-          page.setDefaultNavigationTimeout(15000);
-          await page.goto("https://agenda.ufc.br/");
+  
+          await page.goto("https://agenda.ufc.br/",{
+            timeout:timeoutToRequest
+        });
           page.once("load", () =>
             console.log("Page inicial de EVENTOS carregada com sucesso!")
           );
@@ -190,7 +195,7 @@ class ShowHighlightsEventsUseCase {
           }
 
         } catch (error) {
-          if (error instanceof puppeteer.errors.TimeoutError) {
+          if (error instanceof this.scrapper.errors.TimeoutError) {
             throw new Error(
               "[TIMEOUT] - ",
               error
