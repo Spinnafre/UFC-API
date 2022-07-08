@@ -3,7 +3,7 @@ const puppeteer = require("puppeteer");
 class ShowEventsPerPageUseCase {
   async execute(pageNumber) {
     try {
-      const browser = await puppeteer.launch({args:['--no-sandbox']});
+      const browser = await puppeteer.launch({headless: true,args:['--no-sandbox','--disable-setuid-sandbox']});
       const page = await browser.newPage();
       page.setDefaultNavigationTimeout(15000);
       await page.goto(

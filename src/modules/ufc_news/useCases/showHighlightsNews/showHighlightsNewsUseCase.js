@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer');
 class ShowHighlightsNewsUseCase {
     async execute() {
         try {
-            const browser = await puppeteer.launch({args:['--no-sandbox']});
+            const browser = await puppeteer.launch({headless: true,args:['--no-sandbox','--disable-setuid-sandbox']});
             const page = await browser.newPage();
             await page.goto('https://www.ufc.br');
             page.once('load', () => console.log('Page inicial da UFC carregada com sucesso!'));

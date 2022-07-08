@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer');
 class ShowAllNewsUseCase {
     async execute(pageNumber = 10, title = null,domain=null) {
         try {
-            const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+            const browser = await puppeteer.launch({headless: true,args:['--no-sandbox','--disable-setuid-sandbox']});
             const page = await browser.newPage();
             page.setDefaultNavigationTimeout(30000);
             console.log(`https://${domain}/pt/category/noticias/page/${pageNumber}/?s=${title}`)
