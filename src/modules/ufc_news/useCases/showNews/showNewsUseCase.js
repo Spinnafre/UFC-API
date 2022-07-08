@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer');
 class ShowNewsUseCase {
     async execute(pageNumber=10,title=null) {
         try {
-            const browser = await puppeteer.launch({headless: true,args:['--no-sandbox','--disable-setuid-sandbox']});
+            const browser = await puppeteer.launch({args:['--no-sandbox','--disable-setuid-sandbox']});
             const page = await browser.newPage();
             page.setDefaultNavigationTimeout(30000);
             console.log(`https://www.ufc.br/noticias/noticias-de-2022?start=${pageNumber}`)
