@@ -1,5 +1,5 @@
 const { browserOptions, timeoutToRequest } = require('../../../config/puppeteer');
-
+const {AppError} =require("../../../shared/errors/AppErrors")
 
 class ShowRUMenuByDayUseCase {
     constructor(puppeteer){
@@ -7,8 +7,8 @@ class ShowRUMenuByDayUseCase {
     }
     async execute(day) {
         
+        const browser = await this.scrapper.launch(browserOptions);
         try {
-            const browser = await this.scrapper.launch(browserOptions);
             const page = await browser.newPage();
             await page.goto(`https://www.ufc.br/restaurante/cardapio/1-restaurante-universitario-de-fortaleza/${day}`,{
                 timeout:timeoutToRequest
@@ -65,11 +65,18 @@ class ShowRUMenuByDayUseCase {
                 return []
             }
             
-            
         } catch (error) {
-            await browser.close()
-            return new Error('Falha ao buscar informações do site do RU da UFC ',error.message)
-        }
+            await browser.close();
+            if (error instanceof this.scrapper.errors.TimeoutError) {
+              throw new AppError({
+                message:
+                    "[TIMEOUT] - Falha ao buscar cardápio do ru pois o tempo limite de requisição foi alcançado " +
+                    error,
+                statusCode: 504,
+            });
+            }
+            throw new AppError({message:`Falha ao realizar busca do cardápio do ru. Error -> ${error.message}`});
+          }
     }
 }
 

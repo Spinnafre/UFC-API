@@ -1,13 +1,13 @@
 const { browserOptions, timeoutToRequest } = require('../../../config/puppeteer');
+const { AppError } = require('../../../shared/errors/AppErrors');
 
 class ShowRUBalanceByUserUseCase {
     constructor(puppeteer){
         this.scrapper=puppeteer
     }
     async execute(input_card_number,input_registry_number) {
-        console.log(input_card_number,input_registry_number)
+        const browser = await this.scrapper.launch(browserOptions);
         try {
-            const browser = await this.scrapper.launch(browserOptions);
             const page = await browser.newPage();
             await page.goto('https://si3.ufc.br/public/iniciarConsultaSaldo.do',{
                 timeout:timeoutToRequest
@@ -111,8 +111,16 @@ class ShowRUBalanceByUserUseCase {
             }
         } catch (error) {
             await browser.close();
-            return new Error('Falha ao buscar notícia do site da UFC ',error.message)
-        }
+            if (error instanceof this.scrapper.errors.TimeoutError) {
+              throw new AppError({
+                message:
+                    "[TIMEOUT] - Falha ao buscar eventos de transações do ru pois o tempo limite de requisição foi alcançado " +
+                    error,
+                statusCode: 504,
+            });
+            }
+            throw new AppError({message:`Falha ao realizar busca de transações do ru. Error -> ${error.message}`});
+          }
     }
 }
 

@@ -1,11 +1,12 @@
 const { browserOptions, timeoutToRequest } = require('../../../../config/puppeteer');
+const { AppError } = require('../../../../shared/errors/AppErrors');
 class ShowContestsAndSelectionsUseCase {
     constructor(puppeteer){
         this.scrapper=puppeteer
     }
     async execute(pageNumber=10,title=null) {
+        const browser = await this.scrapper.launch(browserOptions);
         try {
-            const browser = await this.scrapper.launch(browserOptions);
             const page = await browser.newPage();
             console.log(`https://www.ufc.br/noticias/noticias-e-editais-de-concursos-e-selecoes?start=${pageNumber}`)
             await page.goto(`https://www.ufc.br/noticias/noticias-e-editais-de-concursos-e-selecoes?start=${pageNumber}`,{
@@ -63,10 +64,11 @@ class ShowContestsAndSelectionsUseCase {
             await browser.close();
             return links
         } catch (error) {
+            await browser.close();
             if (error instanceof this.scrapper.errors.TimeoutError) {
-                throw new Error("[TIMEOUT] - ",error)
+                throw new AppError({message:"[TIMEOUT] - falha ao buscar notícias de concursos e seleções pois o tempo limite de requisição foi alcançado - "+error,statusCode:504})
             }
-            throw new Error(error)
+            throw new AppError({message:`Falha ao realizar a busca de notícias de concursos e seleções - ${error.message}`})
         }
     }
 }

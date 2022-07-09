@@ -1,4 +1,5 @@
 const { browserOptions, timeoutToRequest } = require('../../../../config/puppeteer');
+const { AppError } = require('../../../../shared/errors/AppErrors');
 
 
 class ShowHighlightsNewsUseCase {
@@ -6,8 +7,8 @@ class ShowHighlightsNewsUseCase {
         this.scrapper=puppeteer
     }
     async execute() {
+        const browser = await this.scrapper.launch(browserOptions);
         try {
-            const browser = await this.scrapper.launch(browserOptions);
             const page = await browser.newPage();
             await page.goto('https://www.ufc.br',{
                 timeout:timeoutToRequest
@@ -90,11 +91,17 @@ class ShowHighlightsNewsUseCase {
             await browser.close();
             return news
         } catch (error) {
-            console.log(error.message)
+            await browser.close();
             if (error instanceof this.scrapper.errors.TimeoutError) {
-                return new Error('Falha ao buscar notícia do site da UFC ',error.message)
+              throw new AppError({
+                message:
+                    "[TIMEOUT] - Falha ao buscar notícias em destaques pois o tempo limite de requisição foi alcançado " +
+                    error,
+                statusCode: 504,
+            });
             }
-        }
+            throw new AppError({message:`Falha ao realizar  busca de notícias em destaques . Error -> ${error.message}`});
+          }
     }
 }
 

@@ -1,11 +1,12 @@
 const { browserOptions, timeoutToRequest } = require('../../../../config/puppeteer');
+const { AppError } = require('../../../../shared/errors/AppErrors');
 class ShowNewsUseCase {
     constructor(puppeteer){
         this.scrapper=puppeteer
     }
     async execute(pageNumber=10,title=null) {
+        const browser = await this.scrapper.launch(browserOptions);
         try {
-            const browser = await this.scrapper.launch(browserOptions);
             const page = await browser.newPage();
             console.log(`https://www.ufc.br/noticias/noticias-de-2022?start=${pageNumber}`)
             await page.goto(`https://www.ufc.br/noticias/noticias-de-2022?start=${pageNumber}`,{
@@ -64,11 +65,17 @@ class ShowNewsUseCase {
             await browser.close();
             return links
         } catch (error) {
+            await browser.close();
             if (error instanceof this.scrapper.errors.TimeoutError) {
-                throw new Error("[TIMEOUT] - ",error)
+              throw new AppError({
+                message:
+                    "[TIMEOUT] - Falha ao buscar notícias pois o tempo limite de requisição foi alcançado " +
+                    error,
+                statusCode: 504,
+            });
             }
-            throw new Error(error)
-        }
+            throw new AppError({message:`Falha ao realizar busca de notícias . Error -> ${error.message}`});
+          }
     }
 }
 

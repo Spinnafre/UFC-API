@@ -1,12 +1,13 @@
 const { browserOptions, timeoutToRequest } = require("../../../../config/puppeteer");
+const { AppError } = require("../../../../shared/errors/AppErrors");
 
 class ShowHighlightsEventsUseCase {
     constructor(puppeteer){
       this.scrapper=puppeteer
     }
     async execute() {
+      const browser = await this.scrapper.launch(browserOptions);
         try {
-          const browser = await this.scrapper.launch(browserOptions);
           const page = await browser.newPage();
   
           await page.goto("https://agenda.ufc.br/",{
@@ -188,20 +189,23 @@ class ShowHighlightsEventsUseCase {
           })
       
           await browser.close();
-
+          
           return {
             highlightsEvents,
             next_events
           }
-
+          
         } catch (error) {
+          await browser.close();
           if (error instanceof this.scrapper.errors.TimeoutError) {
-            throw new Error(
-              "[TIMEOUT] - ",
-              error
-            );
+            throw new AppError({
+              message:
+                  "[TIMEOUT] - Falha ao buscar eventos principais pois o tempo limite de requisição foi alcançado " +
+                  error,
+              statusCode: 504,
+          });
           }
-          throw new Error(error);
+          throw new AppError({message:`Falha ao realizar busca de eventos principais . Error -> ${error.message}`});
         }
       }
 }

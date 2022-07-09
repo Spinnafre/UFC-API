@@ -10,8 +10,8 @@ const showNewsByDomainController=require("../../../../modules/ufc_news/useCases/
 
 const router=Router()
 
-router.get('/',(req,res)=>{
-    return showNewsController().handle(req,res)
+router.get('/',(req,res,next)=>{
+    return showNewsController().handle(req,res,next)
 })
 
 router.get('/ping',(req,res)=>{
@@ -19,28 +19,28 @@ router.get('/ping',(req,res)=>{
     return res.end()
 })
 
-router.get('/all',(req,res)=>{
-    return showNewsByDomainController().handle(req,res)
+router.get('/all',(req,res,next)=>{
+    return showNewsByDomainController().handle(req,res,next)
 })
 
-router.get('/contestsAndSelections',(req,res)=>{
-    return showContestsAndSelectionsController().handle(req,res)
+router.get('/contestsAndSelections',(req,res,next)=>{
+    return showContestsAndSelectionsController().handle(req,res,next)
 })
 
-router.get('/highlightsNews',(req,res)=>{
-    return showHighlightsNewsController().handle(req,res)
+router.get('/highlightsNews',(req,res,next)=>{
+    return showHighlightsNewsController().handle(req,res,next)
 })
 
-router.get('/events',(req,res)=>{
-    return showFilteredEventsController().handle(req,res)
+router.get('/events',(req,res,next)=>{
+    return showFilteredEventsController().handle(req,res,next)
 })
 
-router.get('/events/:id',(req,res)=>{
-    return showEventsPerPageController().handle(req,res)
+router.get('/events/:id',(req,res,next)=>{
+    return showEventsPerPageController().handle(req,res,next)
 })
 
-router.get('/main-events',(req,res)=>{
-    return showMainEventsController().handle(req,res)
+router.get('/main-events',(req,res,next)=>{
+    return showMainEventsController().handle(req,res,next)
 })
 
 
