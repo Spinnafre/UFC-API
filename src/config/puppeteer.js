@@ -9,5 +9,5 @@ module.exports = {
             "--no-zygote"
         ]
     },
-    timeoutToRequest:1000
+    timeoutToRequest:10000
 }
