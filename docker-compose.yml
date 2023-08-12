@@ -1,0 +1,23 @@
+version: '3'
+services:
+  api-ufc:
+    build: .
+    container_name: "api-ufc"
+    volumes:
+      - ./:/usr/src/app
+      - nodemodules_api:/usr/src/app/node_modules
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    networks:
+      - private
+
+volumes:
+  nodemodules: {}
+  nodemodules_api: {}
+
+networks:
+  private:
+  custom:
+    name: jobs
+    driver: bridge
