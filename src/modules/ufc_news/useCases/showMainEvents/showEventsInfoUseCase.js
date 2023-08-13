@@ -11,7 +11,7 @@ class ShowHighlightsEventsUseCase {
           const page = await browser.newPage();
   
           await page.goto("https://agenda.ufc.br/",{
-            timeout:timeoutToRequest
+            timeout:1000
         });
           page.once("load", () =>
             console.log("Page inicial de EVENTOS carregada com sucesso!")

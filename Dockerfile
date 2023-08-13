@@ -1,0 +1,31 @@
+# syntax=docker/dockerfile:1.4
+
+FROM node:18-bullseye-slim
+
+LABEL mode="development"
+
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+
+RUN apt-get update && apt-get install gnupg wget -y && \
+    wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
+    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
+    apt-get update && \
+    apt-get install google-chrome-stable -y --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm ci
+
+ADD . .
+
+ARG PORT=8080
+ENV PORT $PORT
+EXPOSE $PORT
+
+HEALTHCHECK --interval=30s --timeout=12s --start-period=30s \
+    CMD node healthcheck.js
+
+CMD npm run dev
