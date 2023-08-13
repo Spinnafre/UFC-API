@@ -7,7 +7,7 @@ services:
       - ./:/usr/src/app
       - nodemodules_api:/usr/src/app/node_modules
     ports:
-      - "8080:8080"
+      - "80:80"
     restart: on-failure
     networks:
       - private

@@ -1,0 +1,13 @@
+node_modules
+.envrc
+.envrc.sample
+.gitignore
+.editorconfig
+.prettierrc
+.vscode
+.git
+.gitignore
+README.md
+Dockerfile*
+docker-compose*
+dist

@@ -1,8 +1,28 @@
 # syntax=docker/dockerfile:1.4
 
-FROM node:18-bullseye-slim
+FROM node:18-bullseye-slim AS build
 
-LABEL mode="development"
+RUN apt-get update && apt-get install -y --no-install-recommends dumb-init
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+COPY . /usr/src/app
+
+# RUN npm run build
+
+# RUN rm -rf node_modules
+
+RUN npm ci --only=production
+
+# Final stage
+FROM node:18-bullseye-slim AS final
+
+LABEL mode="production"
+
+WORKDIR /usr/src/app
+
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
@@ -13,19 +33,22 @@ RUN apt-get update && apt-get install gnupg wget -y && \
     apt-get install google-chrome-stable -y --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-WORKDIR /usr/src/app
+ARG NODE_ENV=production
+ENV NODE_ENV $NODE_ENV
 
-COPY package*.json ./
-
-RUN npm ci
-
-ADD . .
-
-ARG PORT=8080
+ARG PORT=80
 ENV PORT $PORT
 EXPOSE $PORT
+
+USER node
+
+COPY --from=build /usr/bin/dumb-init /usr/bin/dumb-init
+
+COPY --from=build --chown=node:node /usr/src/app/node_modules node_modules
+# COPY --from=build --chown=node:node /usr/src/app/dist dist
+COPY --chown=node:node . /usr/src/app
 
 HEALTHCHECK --interval=30s --timeout=12s --start-period=30s \
     CMD node healthcheck.js
 
-CMD npm run dev
+CMD node src/shared/infra/http/server.js
