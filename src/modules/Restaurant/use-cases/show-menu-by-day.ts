@@ -1,86 +1,98 @@
-const { browserOptions, timeoutToRequest } = require('../../../config/puppeteer');
-const {AppError} =require("../../../shared/errors/AppErrors")
+import browserOptions from "../../../main/config/puppeteer";
+import { Either, left, right } from "../../../shared/Either";
+import { PuppeteerAdapter } from "../../../shared/adapters/scrapper/puppeteer-adapter";
+import { ShowMenuByDay } from "../domain/use-cases/show-menu-by-day";
+export class ShowRUMenuByDayUseCase {
+  private scrapper: PuppeteerAdapter;
+  static baseUrl: string =
+    "https://www.ufc.br/restaurante/cardapio/1-restaurante-universitario-de-fortaleza";
 
-class ShowRUMenuByDayUseCase {
-    constructor(puppeteer){
-        this.scrapper=puppeteer
+  static maxPageTimeout: number = 10000;
+
+  constructor(scrapper: PuppeteerAdapter) {
+    this.scrapper = scrapper;
+  }
+  async execute(
+    day: ShowMenuByDay.Request
+  ): Promise<Either<Error, ShowMenuByDay.Response>> {
+    try {
+      await this.scrapper.launch(browserOptions);
+
+      await this.scrapper.openNewTab();
+
+      const url = ShowRUMenuByDayUseCase.baseUrl + `/${day}`;
+
+      await this.scrapper.navigateToUrl(
+        url,
+        ShowRUMenuByDayUseCase.maxPageTimeout
+      );
+
+      const typesOfMeats = await this.scrapper.pageEvaluate(() => {
+        const types = document.querySelector(".c-cardapios");
+        if (types === null) {
+          return null;
+        }
+        const tagTitles = Array.from(types.getElementsByTagName("h3"));
+
+        const titlesIDs = tagTitles.map((title) => {
+          return title.getAttribute("id");
+        });
+
+        return titlesIDs;
+      });
+
+      console.log("[LOG] Searching by meats");
+
+      const result = typesOfMeats
+        ? typesOfMeats.map(async (typeMeat: string) => {
+            //.refeicao.desjejum > .listras
+            const selector = `.refeicao.${typeMeat} > .listras`;
+
+            const meat = await this.scrapper.pageEvaluateWithSelector(
+              (table) => {
+                const removeBlanksLines = (text: string) => {
+                  const allLines = text.split("\n");
+                  return allLines.join(", ");
+                };
+
+                const rows = Array.from(table.getElementsByTagName("tr"));
+
+                return rows.map((row) => {
+                  const title = row.firstElementChild?.textContent?.trim();
+
+                  const options = removeBlanksLines(
+                    (<HTMLElement>row?.lastElementChild).innerText.trim()
+                  );
+
+                  return {
+                    title,
+                    options,
+                  };
+                });
+              },
+              selector
+            );
+
+            return {
+              type: typeMeat,
+              meat,
+            };
+          })
+        : [];
+
+      console.log(
+        `[LOG] Successfully to search meats, ${result.length} data loaded.`
+      );
+
+      await this.scrapper.closeBrowser();
+
+      return right(result);
+    } catch (error) {
+      console.error(`❌ [ERROR] : ShowRUMenuByDayUseCase : ${error}`);
+
+      await this.scrapper.closeBrowser();
+
+      return left(error as Error);
     }
-    async execute(day) {
-        
-        const browser = await this.scrapper.launch(browserOptions);
-        try {
-            const page = await browser.newPage();
-            await page.goto(`https://www.ufc.br/restaurante/cardapio/1-restaurante-universitario-de-fortaleza/${day}`,{
-                timeout:timeoutToRequest
-            });
-
-            const typesOfMeat=await page.evaluate(()=>{
-                const types= document.querySelector(".c-cardapios")
-                const tagTitles=Array.from(types.getElementsByTagName("h3"))
-    
-                const titlesIDs=tagTitles.map(title=>{
-                    return title.getAttribute("id")
-                })
-                
-                return titlesIDs
-            })
-    
-            const result=[]
-            if(typesOfMeat.length){
-                for(let type of typesOfMeat){
-                    //.refeicao.desjejum > .listras
-                    const selector=`.refeicao.${type} > .listras`
-                    const meat=await page.$eval(selector,(table)=>{
-                        function removeBlanksLines(text) {
-                            const allLines = text.split("\n");
-                            return allLines.join(", ")
-                        }
-
-                        let result=[]
-    
-                        let rows=Array.from(table.getElementsByTagName("tr"))
-    
-                        for(let row of rows){
-                            let title=row.firstElementChild.textContent.trim()
-                            let options=removeBlanksLines(row.lastElementChild.innerText.trim())
-                            result.push({
-                                title,
-                                options
-                            })
-                        }
-                        return result
-                    })
-                    result.push({
-                        type,
-                        meat
-                    })
-                }
-     
-                await browser.close()
-                return result
-            }else{
-                //Não tem refeição no DIA
-                console.log('SEM REFEIÇÃO NO DIA MAN!')
-                await browser.close()
-                return []
-            }
-            
-        } catch (error) {
-            await browser.close();
-            if (error instanceof this.scrapper.errors.TimeoutError) {
-              throw new AppError({
-                message:
-                    "[TIMEOUT] - Falha ao buscar cardápio do ru pois o tempo limite de requisição foi alcançado " +
-                    error,
-                statusCode: 504,
-            });
-            }
-            throw new AppError({message:`Falha ao realizar busca do cardápio do ru. Error -> ${error.message}`});
-          }
-    }
+  }
 }
-
-module.exports = {
-    ShowRUMenuByDayUseCase
-}
-

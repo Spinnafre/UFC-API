@@ -1,105 +1,118 @@
-const {
-  browserOptions,
-  timeoutToRequest,
-} = require("../../../../main/config/puppeteer");
-const { AppError } = require("../../../../shared/errors/AppErrors");
+import { Either, left, right } from "../../../shared/Either";
+import { PuppeteerAdapter } from "../../../shared/adapters/scrapper/puppeteer-adapter";
+import { ShowBalanceByUser } from "../domain/use-cases/show-balance-by-user";
+import browserOptions from "../../../main/config/puppeteer";
+export class ShowBalanceByUserUseCase {
+  private scrapper: PuppeteerAdapter;
 
-class ShowRUBalanceByUserUseCase {
-  constructor(puppeteer) {
-    this.scrapper = puppeteer;
+  static url: string = "https://si3.ufc.br/public/iniciarConsultaSaldo.do";
+  static maxPageTimeout: number = 10000;
+
+  constructor(scrapper: PuppeteerAdapter) {
+    this.scrapper = scrapper;
   }
-  async execute(input_card_number, input_registry_number) {
-    const browser = await this.scrapper.launch(browserOptions);
+
+  async execute({
+    input_card_number,
+    input_registry_number,
+  }: ShowBalanceByUser.Request): Promise<
+    Either<Error, ShowBalanceByUser.Response>
+  > {
     try {
-      const page = await browser.newPage();
-      await page.goto("https://si3.ufc.br/public/iniciarConsultaSaldo.do", {
-        timeout: timeoutToRequest,
-      });
+      await this.scrapper.launch(browserOptions);
+
+      await this.scrapper.openNewTab();
+
+      await this.scrapper.navigateToUrl(
+        ShowBalanceByUserUseCase.url,
+        ShowBalanceByUserUseCase.maxPageTimeout
+      );
 
       /** 
-             payload: 
-                codigoCartao: 2887746615
-                matriculaAtreladaCartao: 470605
-            */
+        payload: 
+        codigoCartao: 2887746615
+        matriculaAtreladaCartao: 470605
+      */
 
-      /*
-                - [X] Buscar input do cartão (#corpo > form > table > tbody > tr:nth-child(1) > td > input[type=text])
-                - [X] Buscar input da matrícula atralada ao cartão (#corpo > form > table > tbody > tr:nth-child(2) > td > input[type=text])
-                - [X] Buscar botão de consultar (#corpo > form > table > tfoot > tr > td > input[type=submit])
-                - [X] Realizar o submit dos dados
-            */
-
-      await page.evaluate((card_number) => {
-        let input = document.querySelector('input[name="codigoCartao"]');
-        input.value = card_number;
+      await this.scrapper.pageEvaluate((card_number: number) => {
+        const input = document.querySelector('input[name="codigoCartao"]');
+        if (input !== null) (<HTMLInputElement>input).value = `${card_number}`;
         return input;
       }, Number(input_card_number));
 
-      await page.evaluate((registry_number) => {
-        let input = document.querySelector(
+      await this.scrapper.pageEvaluate((registry_number: number) => {
+        const input = document.querySelector(
           'input[name="matriculaAtreladaCartao"]'
         );
-        input.value = registry_number;
+        if (input !== null)
+          (<HTMLInputElement>input).value = `${registry_number}`;
         return input;
       }, Number(input_registry_number));
 
       await Promise.all([
-        page.click(
+        this.scrapper.click(
           "#corpo > form > table > tfoot > tr > td > input[type=submit]"
         ),
-        page.waitForNavigation({ waitUntil: "networkidle2" }),
+        this.scrapper.waitForNavigation({ waitUntil: "networkidle2" }),
       ]);
 
-      const user_info_page = await page.$("#corpo > table:nth-child(6)");
+      const user_info_page = await this.scrapper.getElementHandler(
+        "#corpo > table:nth-child(6)"
+      );
+
       if (!user_info_page) {
-        throw new Error("Não foi possível buscar usuário");
+        return left(new Error("Não foi possível buscar usuário"));
       }
 
-      const content = await page.waitForSelector(
+      const content = await this.scrapper.waitForElement(
         "#corpo > table:nth-child(6) > tbody"
       );
-      const userInfo = await content.evaluate((node) => {
+
+      const userInfo = await this.scrapper.pageElementEvaluate((node) => {
         try {
-          let result = {
+          const result = {
             user_name: "",
             user_credits: "",
           };
-          let rowEven = node.querySelector(".linhaPar");
+          const rowEven = node.querySelector(".linhaPar");
           result.user_name = rowEven.lastElementChild.textContent;
 
-          let rowOdd = node.querySelector(".linhaImpar");
+          const rowOdd = node.querySelector(".linhaImpar");
           result.user_credits = rowOdd.lastElementChild.textContent;
 
           return result;
         } catch (error) {
-          return {};
+          return null;
         }
-      });
+      }, content);
 
-      const last_transactions = await page.$eval(
-        "#corpo > table:nth-child(8) > tbody",
+      const last_transactions = await this.scrapper.pageEvaluateWithSelector(
         (tbody) => {
           try {
-            let result = [];
-            function removeBlanksLines(text) {
+            const result = [];
+
+            const removeBlanksLines = (text: string) => {
               const allLines = text.split("\n");
               const withoutBlankLinesandMarks = allLines.map((line) => {
                 return line.trim();
               });
 
               return withoutBlankLinesandMarks.join(" ");
-            }
-            let rows = Array.from(tbody.getElementsByTagName("tr"));
+            };
+            const rows = Array.from(tbody.getElementsByTagName("tr"));
 
-            for (let row of rows) {
+            for (const row of rows) {
               if (row.hasChildNodes()) {
-                let operation_date = row.children[0].textContent;
-                let operation_type = removeBlanksLines(
-                  row.children[1].textContent
-                );
-                let operation_details = removeBlanksLines(
-                  row.children[2].textContent
-                );
+                const operation_date = row.children[0].textContent;
+
+                const operation_type = row.children[1].textContent
+                  ? removeBlanksLines(row.children[1].textContent)
+                  : null;
+
+                const operation_details = row.children[2].textContent
+                  ? removeBlanksLines(row.children[2].textContent)
+                  : null;
+
                 result.push({
                   date: operation_date,
                   type: operation_type,
@@ -110,33 +123,24 @@ class ShowRUBalanceByUserUseCase {
 
             return result;
           } catch (error) {
-            return {};
+            return null;
           }
-        }
+        },
+        "#corpo > table:nth-child(8) > tbody"
       );
 
-      await browser.close();
-      return {
+      await this.scrapper.closeBrowser();
+
+      return right({
         user_info: userInfo,
         transactions: last_transactions,
-      };
-    } catch (error) {
-      await browser.close();
-      if (error instanceof this.scrapper.errors.TimeoutError) {
-        throw new AppError({
-          message:
-            "[TIMEOUT] - Falha ao buscar eventos de transações do ru pois o tempo limite de requisição foi alcançado " +
-            error,
-          statusCode: 504,
-        });
-      }
-      throw new AppError({
-        message: `Falha ao realizar busca de transações do ru. Error -> ${error.message}`,
       });
+    } catch (error) {
+      console.error(`❌ [ERROR] : ShowBalanceByUser : ${error}`);
+
+      await this.scrapper.closeBrowser();
+
+      return left(error as Error);
     }
   }
 }
-
-module.exports = {
-  ShowRUBalanceByUserUseCase,
-};
