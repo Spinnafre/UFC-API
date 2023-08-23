@@ -2,7 +2,7 @@ import browserOptions from "../../../main/config/puppeteer";
 import { Either, left, right } from "../../../shared/Either";
 import { PuppeteerAdapter } from "../../../shared/adapters/scrapper/puppeteer-adapter";
 import { ShowMenuByDay } from "../domain/use-cases/show-menu-by-day";
-export class ShowRUMenuByDayUseCase {
+export class ShowMenuByDayUseCase {
   private scrapper: PuppeteerAdapter;
   static baseUrl: string =
     "https://www.ufc.br/restaurante/cardapio/1-restaurante-universitario-de-fortaleza";
@@ -20,11 +20,11 @@ export class ShowRUMenuByDayUseCase {
 
       await this.scrapper.openNewTab();
 
-      const url = ShowRUMenuByDayUseCase.baseUrl + `/${day}`;
+      const url = ShowMenuByDayUseCase.baseUrl + `/${day}`;
 
       await this.scrapper.navigateToUrl(
         url,
-        ShowRUMenuByDayUseCase.maxPageTimeout
+        ShowMenuByDayUseCase.maxPageTimeout
       );
 
       const typesOfMeats = await this.scrapper.pageEvaluate(() => {

@@ -6,7 +6,7 @@
   "main": "src/shared/infra/http/app.js",
   "scripts": {
     "start": "node src/shared/infra/http/server.js",
-    "dev": "SET NODE_ENV=dev &  npx nodemon --exec node src/shared/infra/http/server.js",
+    "dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -1,14 +1,20 @@
 import { Router } from "express";
-
-const showRUMenuByDayController = require("../../../../modules/ufc_ru/menu");
-const showRUBalanceByUserController = require("../../../../modules/ufc_ru/balance");
-const putCreditsInCardController = require("../../../../modules/ufc_ru/putCreditsInCard");
+import {
+  showMenuByDayControllerFactory,
+  putCreditsInCardControllerFactory,
+  showBalanceByUserControllerFactory,
+} from "../../../factories/controllers";
 
 const router = Router();
 
 router.get("/menu", async (req, res) => {
   const { day } = req.query;
-  const result = await showRUMenuByDayController().handle(day);
+
+  const request = {
+    date: day as string,
+  } as const;
+
+  const result = await showMenuByDayControllerFactory().handle(request);
 
   return res.status(result.status).json(result.body);
 });
@@ -16,12 +22,13 @@ router.get("/menu", async (req, res) => {
 router.get("/getUserBalance", async (req, res) => {
   const { card_number, registry_number } = req.query;
 
+  // pass params validations to middleware?
   const request = {
-    card_number,
-    registry_number,
-  };
+    card_number: Number(card_number),
+    registry_number: Number(registry_number),
+  } as const;
 
-  const result = await showRUBalanceByUserController().handle(request);
+  const result = await showBalanceByUserControllerFactory().handle(request);
 
   return res.status(result.status).json(result.body);
 });
@@ -31,13 +38,13 @@ router.get("/getPaymentInfo", async (req, res) => {
     req.query;
 
   const request = {
-    card_number,
-    registry_number,
-    qtd_credits,
-    paymentMethod,
-  };
+    input_card_number: Number(card_number),
+    input_registry_number: Number(registry_number),
+    input_qtd_credits: Number(qtd_credits),
+    input_paymentMethod: paymentMethod as string,
+  } as const;
 
-  const result = await putCreditsInCardController().handle(request);
+  const result = await putCreditsInCardControllerFactory().handle(request);
 
   return res.status(result.status).json(result.body);
 });

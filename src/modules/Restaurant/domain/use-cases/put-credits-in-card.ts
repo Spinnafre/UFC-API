@@ -3,7 +3,7 @@ export namespace PutCreditsInCard {
     input_card_number: number;
     input_registry_number: number;
     input_qtd_credits: number;
-    input_paymentMethod: "pix" | "gru";
+    input_paymentMethod: string;
   };
 
   export type Response = {

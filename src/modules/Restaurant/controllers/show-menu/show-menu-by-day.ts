@@ -3,7 +3,7 @@ import { HttpResponse } from "../../../../shared/presentation/http-response";
 import { ValidateShowMenuRequest } from "../../infra/validator/validate-request";
 import { ShowMenuRequestDTO, ShowMenuResponseItems } from "./dto";
 
-export class ShowMenuController {
+export class ShowMenuByDayController {
   private showMenu: any;
   private validateInput: ValidateShowMenuRequest;
   constructor(showMenu: any, validateInput: ValidateShowMenuRequest) {
