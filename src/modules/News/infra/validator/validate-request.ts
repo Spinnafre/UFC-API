@@ -6,7 +6,7 @@ import { validateInput } from "../../../../shared/input-validator";
 import { PutCreditsInCardRequestDTO } from "../../controllers/put-credits-in-card/dto";
 import { ShowMenuRequestDTO } from "../../controllers/show-menu/dto";
 
-export class ValidateUserBalanceRequest
+export class ValidateGetAllNewsRequest
   implements
     validateInput<
       GetUserBalanceRequestDTO,
@@ -32,7 +32,7 @@ export class ValidateUserBalanceRequest
   }
 }
 
-export class ValidatePutUserCreditsRequest
+export class ValidateGetContestAndSelectionsRequest
   implements
     validateInput<
       PutCreditsInCardRequestDTO,
@@ -60,7 +60,7 @@ export class ValidatePutUserCreditsRequest
   }
 }
 
-export class ValidateShowMenuRequest
+export class ValidateHightLightsNewsRequest
   implements
     validateInput<
       ShowMenuRequestDTO,

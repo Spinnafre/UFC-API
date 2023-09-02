@@ -128,6 +128,16 @@ export class PuppeteerAdapter implements Scrapper {
     return await element?.$eval(selector, command, ...args);
   }
 
+  async elementsEvaluate(
+    selector: string,
+    command: (element: Element[], ...args: unknown[]) => any,
+    elementHandler?: any,
+    ...args: SerializableOrJSHandle[]
+  ): Promise<any> {
+    const element = elementHandler ? elementHandler : this.pageHandler;
+    return await element?.$$eval(selector, command, ...args);
+  }
+
   async pageEvaluateWithSelector<T>(
     pageFunction: (element: Element, ...args: unknown[]) => T | Promise<T>,
     selector: string
