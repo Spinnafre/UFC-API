@@ -2,6 +2,7 @@ import { Either, left, right } from "../../../shared/Either";
 import { PuppeteerAdapter } from "../../../shared/adapters/scrapper/puppeteer-adapter";
 import { GetContestAndSelections } from "../domain/use-cases/get-contests-and-selections";
 import browserOptions from "../../../main/config/puppeteer";
+import { Logger } from "../../../shared/infra/logger/logger";
 
 export class ShowContestsAndSelectionsUseCase {
   private scrapper: PuppeteerAdapter;
@@ -22,7 +23,7 @@ export class ShowContestsAndSelectionsUseCase {
 
       await this.scrapper.openNewTab();
 
-      console.log(this._url + pageNumber);
+      Logger.info(this._url + pageNumber);
 
       await this.scrapper.navigateToUrl(this._url + pageNumber, 15000);
 
@@ -111,7 +112,7 @@ export class ShowContestsAndSelectionsUseCase {
 
       return right(links);
     } catch (error) {
-      console.error(`❌ [ERROR] : ShowContestsAndSelectionsUseCase : ${error}`);
+      Logger.error(`ShowContestsAndSelectionsUseCase : ${error}`);
 
       await this.scrapper.closeBrowser();
 

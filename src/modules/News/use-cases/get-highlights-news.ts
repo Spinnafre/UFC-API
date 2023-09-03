@@ -1,6 +1,7 @@
 import browserOptions from "../../../main/config/puppeteer";
 import { Either, left, right } from "../../../shared/Either";
 import { PuppeteerAdapter } from "../../../shared/adapters/scrapper/puppeteer-adapter";
+import { Logger } from "../../../shared/infra/logger/logger";
 import { GetHighlightsNews } from "../domain/use-cases/get-highlights-news";
 
 export class ShowHighlightsNewsUseCase {
@@ -61,7 +62,7 @@ export class ShowHighlightsNewsUseCase {
       );
 
       if (!highlightsNews.length) {
-        console.log(
+        Logger.warn(
           `Não foi possível obter notícias em destaques da url : ${this._url}`
         );
       }
@@ -124,7 +125,7 @@ export class ShowHighlightsNewsUseCase {
       );
 
       if (!latestNews.length) {
-        console.log(
+        Logger.warn(
           `Não foi possível obter últimas notícias em destaques da url : ${this._url}`
         );
       }
@@ -165,7 +166,7 @@ export class ShowHighlightsNewsUseCase {
       );
 
       if (!contestAndSelections.length) {
-        console.log(
+        Logger.warn(
           `Não foi possível obter notícias de concursos e seleçoes em destaques da url : ${this._url}`
         );
       }
@@ -178,7 +179,7 @@ export class ShowHighlightsNewsUseCase {
         extra: contestAndSelections,
       });
     } catch (error) {
-      console.error(`❌ [ERROR] : ShowHighlightsNewsUseCase : ${error}`);
+      Logger.error(`ShowHighlightsNewsUseCase : ${error}`);
 
       await this.scrapper.closeBrowser();
 

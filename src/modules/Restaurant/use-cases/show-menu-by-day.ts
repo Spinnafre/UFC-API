@@ -1,6 +1,7 @@
 import browserOptions from "../../../main/config/puppeteer";
 import { Either, left, right } from "../../../shared/Either";
 import { PuppeteerAdapter } from "../../../shared/adapters/scrapper/puppeteer-adapter";
+import { Logger } from "../../../shared/infra/logger/logger";
 import { ShowMenuByDay } from "../domain/use-cases/show-menu-by-day";
 export class ShowMenuByDayUseCase {
   private scrapper: PuppeteerAdapter;
@@ -41,7 +42,7 @@ export class ShowMenuByDayUseCase {
         return titlesIDs;
       });
 
-      console.log("[LOG] Searching by meats");
+      Logger.info("Searching by meats");
 
       const result = typesOfMeats
         ? typesOfMeats.map(async (typeMeat: string) => {
@@ -80,15 +81,15 @@ export class ShowMenuByDayUseCase {
           })
         : [];
 
-      console.log(
-        `[LOG] Successfully to search meats, ${result.length} data loaded.`
+      Logger.info(
+        `Successfully to search meats, ${result.length} data loaded.`
       );
 
       await this.scrapper.closeBrowser();
 
       return right(result);
     } catch (error) {
-      console.error(`❌ [ERROR] : ShowRUMenuByDayUseCase : ${error}`);
+      Logger.error(`❌ [ERROR] : ShowRUMenuByDayUseCase : ${error}`);
 
       await this.scrapper.closeBrowser();
 

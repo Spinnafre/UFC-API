@@ -4,6 +4,7 @@ import { handleError } from "../../shared/errors/handler";
 
 import express from "express";
 import { setupRoutes } from "./routes/setup-routes";
+import { Logger } from "../../shared/infra/logger/logger";
 
 const app = express();
 app.use(express.json());
@@ -20,7 +21,7 @@ app.use(async (err: any, req: any, res: any, next: any) => {
 // });
 
 process.on("SIGTERM", () => {
-  console.log("Processo terminado com sucesso");
+  Logger.info("Processo terminado com sucesso");
 });
 
 export default app;

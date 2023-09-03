@@ -1,6 +1,7 @@
 import browserOptions from "../../../main/config/puppeteer";
 import { Either, left, right } from "../../../shared/Either";
 import { PuppeteerAdapter } from "../../../shared/adapters/scrapper/puppeteer-adapter";
+import { Logger } from "../../../shared/infra/logger/logger";
 import { GetNews } from "../domain/use-cases/get-news-by-domain";
 
 export class ShowAllNewsByDomainUseCase {
@@ -30,7 +31,7 @@ export class ShowAllNewsByDomainUseCase {
 
       this.setUrl(domain, pageNumber, title);
 
-      console.log(this._url);
+      Logger.info(this._url);
 
       await this.scrapper.navigateToUrl(this._url, 15000);
 
@@ -129,7 +130,7 @@ export class ShowAllNewsByDomainUseCase {
 
       return right(news);
     } catch (error) {
-      console.error(`❌ [ERROR] : ShowAllNewsUseCase : ${error}`);
+      Logger.error(`ShowAllNewsUseCase : ${error}`);
 
       await this.scrapper.closeBrowser();
 

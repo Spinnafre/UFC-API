@@ -2,6 +2,7 @@ import { Either, left, right } from "../../../shared/Either";
 import { PuppeteerAdapter } from "../../../shared/adapters/scrapper/puppeteer-adapter";
 import { ShowBalanceByUser } from "../domain/use-cases/show-balance-by-user";
 import browserOptions from "../../../main/config/puppeteer";
+import { Logger } from "../../../shared/infra/logger/logger";
 export class ShowBalanceByUserUseCase {
   private scrapper: PuppeteerAdapter;
 
@@ -136,7 +137,7 @@ export class ShowBalanceByUserUseCase {
         transactions: last_transactions,
       });
     } catch (error) {
-      console.error(`❌ [ERROR] : ShowBalanceByUser : ${error}`);
+      Logger.error(`❌ [ERROR] : ShowBalanceByUser : ${error}`);
 
       await this.scrapper.closeBrowser();
 

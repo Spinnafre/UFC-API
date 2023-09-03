@@ -9,6 +9,7 @@ import puppeteer, {
 
 import { setTimeout } from "node:timers/promises";
 import { Scrapper } from "./protocol";
+import { Logger } from "../../infra/logger/logger";
 
 export type launchOptionsParams = LaunchOptions &
   BrowserLaunchArgumentOptions &
@@ -30,14 +31,14 @@ export class PuppeteerAdapter implements Scrapper {
   }
 
   async launch<launchOptionsParams>(launchOption: launchOptionsParams) {
-    console.log("[LOG] Launching browser...");
+    Logger.info("Launching browser...");
 
     // use satisfies here?
     this.browserInstance = await puppeteer.launch(
       launchOption as LaunchOptions
     );
 
-    console.log("[LOG] Success to launch browser :)");
+    Logger.info("Success to launch browser :)");
   }
 
   async click(selector: string): Promise<void> {
@@ -57,17 +58,15 @@ export class PuppeteerAdapter implements Scrapper {
 
     await setTimeout(300);
 
-    this.pageHandler.on("load", () =>
-      console.log("[LOG] Page loaded successfully")
-    );
+    this.pageHandler.on("load", () => Logger.info("Page loaded successfully"));
 
     this.pageHandler.on("error", (err) =>
-      console.log("[ERROR] Error in ", err)
+      Logger.error(`[ERROR] Error in ${err}`)
     );
   }
 
   async navigateToUrl(url: string, timeout = 30000) {
-    console.log(`[LOG] Navigating to URL ::: ${url}`);
+    Logger.info(`Navigating to URL ::: ${url}`);
 
     await this.pageHandler?.goto(url, {
       waitUntil: "domcontentloaded",
@@ -76,7 +75,7 @@ export class PuppeteerAdapter implements Scrapper {
 
     const pageTitle = await this.pageHandler?.title();
 
-    console.log(`[LOG] Page ${pageTitle} loaded successfully :)`);
+    Logger.info(`Page ${pageTitle} loaded successfully :)`);
   }
 
   async getJSONResponseFromRequest(
@@ -99,13 +98,13 @@ export class PuppeteerAdapter implements Scrapper {
 
   async closeBrowser(): Promise<void> {
     await this.closePage();
-    console.log("[LOG] Closing browser...");
+    Logger.info("Closing browser...");
     await this.browserInstance?.close();
-    console.log("[LOG] Bye 😉");
+    Logger.info("Bye 😉");
   }
 
   async closePage(): Promise<void> {
-    console.log("[LOG] Closing page...");
+    Logger.info("Closing page...");
     await this.pageHandler?.close();
   }
 
@@ -177,14 +176,14 @@ export class PuppeteerAdapter implements Scrapper {
   }
 
   async selectInputValue(selector: string, value: string): Promise<void> {
-    console.log(`[LOG] Search by element ${selector}`);
+    Logger.info(`Search by element ${selector}`);
     const input = await this.getElementHandler(selector);
     if (input) {
       await input.select(value);
-      console.log(`[LOG] Element ${selector} selected`);
+      Logger.info(`Element ${selector} selected`);
       return;
     }
-    console.error(`[ERROR] Element ${selector} not found`);
+    Logger.warn(`Element ${selector} not found`);
   }
 
   async waitForElement(

@@ -4,6 +4,7 @@ import { validateInput } from "../../../../shared/input-validator";
 import { GetAllNewsRequestDTO } from "../../controllers/gel-all-news/dto";
 import { ShowContestsAndSelectionsRequestDTO } from "../../controllers/get-contests-and-selections/dto";
 import { GetNewsByDomainRequestDTO } from "../../controllers/get-news-by-domain/dto";
+import { Logger } from "../../../../shared/infra/logger/logger";
 export class ValidateGetAllNewsRequest
   implements
     validateInput<
@@ -22,7 +23,7 @@ export class ValidateGetAllNewsRequest
     const { error, warning } = schema.validate(request);
 
     if (error) {
-      console.log("[REQUEST VALIDATION] ::: ", error);
+      Logger.error(error);
       return left(error);
     }
 
@@ -48,10 +49,7 @@ export class ValidateGetContestAndSelectionsRequest
     const { error, warning } = Joi.compile(schema).validate(request);
 
     if (error) {
-      console.log(
-        "[REQUEST VALIDATION] ::: ",
-        error.details.map((details) => details.message).join(", ")
-      );
+      Logger.error(error.details.map((details) => details.message).join(", "));
       return left(error);
     }
 
@@ -78,7 +76,7 @@ export class ValidateGetNewsByDomainRequest
     const { error, warning } = schema.validate(request);
 
     if (error) {
-      console.log("[REQUEST VALIDATION] ::: ", error);
+      Logger.error(error);
       return left(error);
     }
 

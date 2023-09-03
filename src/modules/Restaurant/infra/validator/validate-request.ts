@@ -5,6 +5,7 @@ import { Either, left, right } from "../../../../shared/Either";
 import { validateInput } from "../../../../shared/input-validator";
 import { PutCreditsInCardRequestDTO } from "../../controllers/put-credits-in-card/dto";
 import { ShowMenuRequestDTO } from "../../controllers/show-menu/dto";
+import { Logger } from "../../../../shared/infra/logger/logger";
 
 export class ValidateUserBalanceRequest
   implements
@@ -24,7 +25,7 @@ export class ValidateUserBalanceRequest
     const { error, warning } = schema.validate(request);
 
     if (error) {
-      console.log("[REQUEST VALIDATION] ::: ", error);
+      Logger.error(error);
       return left(error);
     }
 
@@ -52,7 +53,7 @@ export class ValidatePutUserCreditsRequest
     const { error, warning } = schema.validate(request);
 
     if (error) {
-      console.log("[REQUEST VALIDATION] ::: ", error);
+      Logger.error(error);
       return left(error);
     }
 
@@ -77,7 +78,7 @@ export class ValidateShowMenuRequest
     const { error, warning } = schema.validate(request);
 
     if (error) {
-      console.log("[REQUEST VALIDATION] ::: ", error);
+      Logger.error(error);
       return left(error);
     }
 

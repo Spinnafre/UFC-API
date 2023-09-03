@@ -1,6 +1,7 @@
 import browserOptions from "../../../main/config/puppeteer";
 import { Either, left, right } from "../../../shared/Either";
 import { PuppeteerAdapter } from "../../../shared/adapters/scrapper/puppeteer-adapter";
+import { Logger } from "../../../shared/infra/logger/logger";
 import { ElementNotFoundError } from "../domain/errors/element-not-found";
 import { PutCreditsInCard } from "../domain/use-cases/put-credits-in-card";
 
@@ -236,7 +237,7 @@ export class PutCreditsInCardUseCase {
         payerDetails,
       });
     } catch (error) {
-      console.error(`❌ [ERROR] : PutCreditsInCardUseCase : ${error}`);
+      Logger.error(`PutCreditsInCardUseCase : ${error}`);
       await this.scrapper.closeBrowser();
 
       return left(error as Error);
