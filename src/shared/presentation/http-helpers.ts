@@ -12,15 +12,21 @@ export const created = (data: any): HttpResponse => ({
 
 export const forbidden = (error: Error): HttpResponse => ({
   status: 403,
-  body: error,
+  body: {
+    message: error.message,
+  },
 });
 
 export const badRequest = (error: Error): HttpResponse => ({
   status: 400,
-  body: error,
+  body: {
+    message: error.message,
+  },
 });
 
 export const serverError = (error: Error): HttpResponse => ({
   status: 500,
-  body: error,
+  body: {
+    message: error.message,
+  },
 });

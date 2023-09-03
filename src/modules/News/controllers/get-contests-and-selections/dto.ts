@@ -1,14 +1,9 @@
-export interface PutCreditsInCardRequestDTO {
-  input_card_number: number;
-  input_registry_number: number;
-  input_qtd_credits: number;
-  input_paymentMethod: string;
+export interface ShowContestsAndSelectionsRequestDTO {
+  pageNumber: number;
+  title?: string;
 }
-export interface PutCreditsInCardResponseDTO {
-  payment: {
-    expiration: string;
-    qrCodeImg: string;
-    qrCodeText: string;
-  };
-  payerDetails: any;
-}
+export type ShowContestsAndSelectionsResponseDTO = Array<{
+  text: string;
+  link: string;
+  date: string;
+}>;

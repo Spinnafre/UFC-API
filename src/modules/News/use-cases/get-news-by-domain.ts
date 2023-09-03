@@ -1,9 +1,9 @@
 import browserOptions from "../../../main/config/puppeteer";
 import { Either, left, right } from "../../../shared/Either";
 import { PuppeteerAdapter } from "../../../shared/adapters/scrapper/puppeteer-adapter";
-import { GetNews } from "../domain/use-cases/get-news";
+import { GetNews } from "../domain/use-cases/get-news-by-domain";
 
-export class ShowAllNewsUseCase {
+export class ShowAllNewsByDomainUseCase {
   private scrapper: PuppeteerAdapter;
 
   private _url: string = "";
@@ -32,7 +32,7 @@ export class ShowAllNewsUseCase {
 
       console.log(this._url);
 
-      await this.scrapper.navigateToUrl(this._url, timeoutToRequest);
+      await this.scrapper.navigateToUrl(this._url, 15000);
 
       //Se passar title significa que irá pesquisar apenas por título
       //evaluateHandle => Melhor forma e mais segura de recuperar elementos da DOM

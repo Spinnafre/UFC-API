@@ -1,10 +1,8 @@
-export interface PutCreditsInCardRequestDTO {
-  input_card_number: number;
-  input_registry_number: number;
-  input_qtd_credits: number;
-  input_paymentMethod: string;
+export interface GetAllNewsRequestDTO {
+  pageNumber: number;
+  title: string;
 }
-export interface PutCreditsInCardResponseDTO {
+export interface GetAllNewsResponseDTO {
   payment: {
     expiration: string;
     qrCodeImg: string;

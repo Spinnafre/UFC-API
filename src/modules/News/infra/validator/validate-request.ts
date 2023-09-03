@@ -1,24 +1,22 @@
 import Joi from "joi";
-
-import { GetUserBalanceRequestDTO } from "../../controllers/show-balance-by-user/dto";
 import { Either, left, right } from "../../../../shared/Either";
 import { validateInput } from "../../../../shared/input-validator";
-import { PutCreditsInCardRequestDTO } from "../../controllers/put-credits-in-card/dto";
-import { ShowMenuRequestDTO } from "../../controllers/show-menu/dto";
-
+import { GetAllNewsRequestDTO } from "../../controllers/gel-all-news/dto";
+import { ShowContestsAndSelectionsRequestDTO } from "../../controllers/get-contests-and-selections/dto";
+import { GetNewsByDomainRequestDTO } from "../../controllers/get-news-by-domain/dto";
 export class ValidateGetAllNewsRequest
   implements
     validateInput<
-      GetUserBalanceRequestDTO,
-      Either<Joi.ValidationError, GetUserBalanceRequestDTO>
+      GetAllNewsRequestDTO,
+      Either<Joi.ValidationError, GetAllNewsRequestDTO>
     >
 {
   validate(
-    request: GetUserBalanceRequestDTO
-  ): Either<Joi.ValidationError, GetUserBalanceRequestDTO> {
+    request: GetAllNewsRequestDTO
+  ): Either<Joi.ValidationError, GetAllNewsRequestDTO> {
     const schema = Joi.object({
-      card_number: Joi.number().integer().required(),
-      registry_number: Joi.number().integer().required(),
+      pageNumber: Joi.number().integer().required(),
+      title: Joi.string(),
     });
 
     const { error, warning } = schema.validate(request);
@@ -35,24 +33,25 @@ export class ValidateGetAllNewsRequest
 export class ValidateGetContestAndSelectionsRequest
   implements
     validateInput<
-      PutCreditsInCardRequestDTO,
-      Either<Joi.ValidationError, PutCreditsInCardRequestDTO>
+      ShowContestsAndSelectionsRequestDTO,
+      Either<Joi.ValidationError, ShowContestsAndSelectionsRequestDTO>
     >
 {
   validate(
-    request: PutCreditsInCardRequestDTO
-  ): Either<Joi.ValidationError, PutCreditsInCardRequestDTO> {
-    const schema = Joi.object({
-      input_card_number: Joi.number().integer().required(),
-      input_registry_number: Joi.number().integer().required(),
-      input_qtd_credits: Joi.number().integer().required(),
-      input_paymentMethod: Joi.string().valid("pix", "gru").required(),
+    request: ShowContestsAndSelectionsRequestDTO
+  ): Either<Joi.ValidationError, ShowContestsAndSelectionsRequestDTO> {
+    const schema = Joi.object().keys({
+      pageNumber: Joi.number().integer().required(),
+      title: Joi.string(),
     });
 
-    const { error, warning } = schema.validate(request);
+    const { error, warning } = Joi.compile(schema).validate(request);
 
     if (error) {
-      console.log("[REQUEST VALIDATION] ::: ", error);
+      console.log(
+        "[REQUEST VALIDATION] ::: ",
+        error.details.map((details) => details.message).join(", ")
+      );
       return left(error);
     }
 
@@ -60,18 +59,20 @@ export class ValidateGetContestAndSelectionsRequest
   }
 }
 
-export class ValidateHightLightsNewsRequest
+export class ValidateGetNewsByDomainRequest
   implements
     validateInput<
-      ShowMenuRequestDTO,
-      Either<Joi.ValidationError, ShowMenuRequestDTO>
+      GetNewsByDomainRequestDTO,
+      Either<Joi.ValidationError, GetNewsByDomainRequestDTO>
     >
 {
   validate(
-    request: ShowMenuRequestDTO
-  ): Either<Joi.ValidationError, ShowMenuRequestDTO> {
+    request: GetNewsByDomainRequestDTO
+  ): Either<Joi.ValidationError, GetNewsByDomainRequestDTO> {
     const schema = Joi.object({
-      date: Joi.date().min("2019-01-01").iso().required(),
+      domain: Joi.string().required(),
+      pageNumber: Joi.number().integer().required(),
+      title: Joi.string().required(),
     });
 
     const { error, warning } = schema.validate(request);

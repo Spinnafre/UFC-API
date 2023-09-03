@@ -1,7 +1,7 @@
 export namespace GetContestAndSelections {
   export type Request = {
     pageNumber: number;
-    title: string;
+    title?: string;
   };
 
   export type Response = Array<{

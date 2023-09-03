@@ -1,13 +1,26 @@
+import { badRequest, ok } from "../../../../shared/presentation/http-helpers";
+import { HttpResponse } from "../../../../shared/presentation/http-response";
+import { ShowHighlightsNewsUseCase } from "../../use-cases/get-highlights-news";
+import { GetHighlightsNewsResponseDTO } from "./dto";
+
 export class ShowHighlightsNewsController {
-  constructor(showHighlightsNewsUseCase) {
+  private showHighlightsNewsUseCase: ShowHighlightsNewsUseCase;
+
+  constructor(showHighlightsNewsUseCase: ShowHighlightsNewsUseCase) {
     this.showHighlightsNewsUseCase = showHighlightsNewsUseCase;
   }
-  async handle(req, res, next) {
+
+  async handle(): Promise<HttpResponse<GetHighlightsNewsResponseDTO>> {
     try {
       const result = await this.showHighlightsNewsUseCase.execute();
-      return res.status(200).json(result);
+
+      if (result.isLeft()) {
+        return badRequest(result.value);
+      }
+
+      return ok(result);
     } catch (error) {
-      next(error);
+      return badRequest(error as Error);
     }
   }
 }

@@ -1,48 +1,59 @@
 import { NextFunction, Request, Response, Router } from "express";
 
-const showNewsController = require("../../../../modules/ufc_news/useCases/showNews");
-const showHighlightsNewsController = require("../../../../modules/ufc_news/useCases/showHighlightsNews");
-const showFilteredEventsController = require("../../../../modules/ufc_news/useCases/showEventsByFilterType");
-const showMainEventsController = require("../../../../modules/ufc_news/useCases/showMainEvents");
-const showEventsPerPageController = require("../../../../modules/ufc_news/useCases/showEventsPerPage");
-const showContestsAndSelectionsController = require("../../../../modules/ufc_news/useCases/showContestsAndSelections");
-const showNewsByDomainController = require("../../../../modules/ufc_news/useCases/getNewsByDomain");
+import {
+  getContestAndSelectionsControllerFactory,
+  getHighlightsNewsControllerFactory,
+  getNewsByDomainControllerFactory,
+  getNewsControllerFactory,
+} from "../../../factories/controllers";
 
-export const newsRouter = (): Router => {
-  const router = Router();
+const router = Router();
 
-  router.get("/", (req: Request, res: Response, next: NextFunction) => {
-    return showNewsController().handle(req, res, next);
-  });
+router.get("/", async (req: Request, res: Response, next: NextFunction) => {
+  const { pageNumber, title } = req.query;
 
-  router.get("/ping", (req, res) => {
-    res.json({ msg: "ok" });
-    return res.end();
-  });
+  const request = {
+    pageNumber: Number(pageNumber),
+    title: title as string,
+  } as const;
 
-  router.get("/all", (req, res, next) => {
-    return showNewsByDomainController().handle(req, res, next);
-  });
+  const result = await getNewsControllerFactory().handle(request);
 
-  router.get("/contestsAndSelections", (req, res, next) => {
-    return showContestsAndSelectionsController().handle(req, res, next);
-  });
+  return res.status(result.status).json(result.body);
+});
 
-  router.get("/highlightsNews", (req, res, next) => {
-    return showHighlightsNewsController().handle(req, res, next);
-  });
+router.get("/all", async (req, res, next) => {
+  const { pageNumber, title, domain } = req.query;
 
-  router.get("/events", (req, res, next) => {
-    return showFilteredEventsController().handle(req, res, next);
-  });
+  const request = {
+    pageNumber: Number(pageNumber),
+    title: title as string,
+    domain: domain as string,
+  } as const;
 
-  router.get("/events/:id", (req, res, next) => {
-    return showEventsPerPageController().handle(req, res, next);
-  });
+  const result = await getNewsByDomainControllerFactory().handle(request);
 
-  router.get("/main-events", (req, res, next) => {
-    return showMainEventsController().handle(req, res, next);
-  });
+  return res.status(result.status).json(result.body);
+});
 
-  return router;
-};
+router.get("/contestsAndSelections", async (req, res, next) => {
+  const { pageNumber, title } = req.query;
+
+  const request = {
+    pageNumber: Number(pageNumber),
+    title: title as string,
+  } as const;
+
+  const result = await getContestAndSelectionsControllerFactory().handle(
+    request
+  );
+
+  return res.status(result.status).json(result.body);
+});
+
+router.get("/highlightsNews", async (req, res, next) => {
+  const result = await getHighlightsNewsControllerFactory().handle();
+  return res.status(result.status).json(result.body);
+});
+
+export default router;

@@ -51,4 +51,4 @@ COPY --chown=node:node . /usr/src/app
 HEALTHCHECK --interval=30s --timeout=12s --start-period=30s \
     CMD node healthcheck.js
 
-CMD node src/shared/infra/http/server.js
+CMD node src/main/http/server.ts

@@ -6,7 +6,7 @@ import browserOptions from "../../../main/config/puppeteer";
 export class ShowContestsAndSelectionsUseCase {
   private scrapper: PuppeteerAdapter;
   private _url: string =
-    "`https://www.ufc.br/noticias/noticias-e-editais-de-concursos-e-selecoes?start=";
+    "https://www.ufc.br/noticias/noticias-e-editais-de-concursos-e-selecoes?start=";
 
   constructor(scrapper: PuppeteerAdapter) {
     this.scrapper = scrapper;
@@ -24,10 +24,7 @@ export class ShowContestsAndSelectionsUseCase {
 
       console.log(this._url + pageNumber);
 
-      await this.scrapper.navigateToUrl(
-        this._url + pageNumber,
-        timeoutToRequest
-      );
+      await this.scrapper.navigateToUrl(this._url + pageNumber, 15000);
 
       //Se passar title significa que irá pesquisar apenas por título
       //evaluateHandle => Melhor forma e mais segura de recuperar elementos da DOM

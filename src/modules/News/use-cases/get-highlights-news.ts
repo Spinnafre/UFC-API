@@ -18,7 +18,7 @@ export class ShowHighlightsNewsUseCase {
 
       await this.scrapper.openNewTab();
 
-      await this.scrapper.navigateToUrl(this._url, timeoutToRequest);
+      await this.scrapper.navigateToUrl(this._url, 15000);
 
       await this.scrapper.waitForElement("#conteudo");
 

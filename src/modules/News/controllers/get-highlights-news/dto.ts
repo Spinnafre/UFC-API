@@ -1,14 +1,24 @@
-export interface PutCreditsInCardRequestDTO {
-  input_card_number: number;
-  input_registry_number: number;
-  input_qtd_credits: number;
-  input_paymentMethod: string;
-}
-export interface PutCreditsInCardResponseDTO {
-  payment: {
-    expiration: string;
-    qrCodeImg: string;
-    qrCodeText: string;
-  };
-  payerDetails: any;
+export interface GetHighlightsNewsResponseDTO {
+  highlight:
+    | Array<{
+        link: string;
+        thumbnailUrl: string;
+      }>
+    | [];
+  latestNews:
+    | Array<{
+        img: string;
+        title: {
+          url: string;
+          description: string;
+        };
+        description: string;
+      }>
+    | [];
+  extra:
+    | Array<{
+        url: string;
+        description: string;
+      }>
+    | [];
 }
