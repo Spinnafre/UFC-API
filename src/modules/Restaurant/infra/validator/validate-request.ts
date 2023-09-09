@@ -44,10 +44,10 @@ export class ValidatePutUserCreditsRequest
     request: PutCreditsInCardRequestDTO
   ): Either<Joi.ValidationError, PutCreditsInCardRequestDTO> {
     const schema = Joi.object({
-      input_card_number: Joi.number().integer().required(),
-      input_registry_number: Joi.number().integer().required(),
-      input_qtd_credits: Joi.number().integer().required(),
-      input_paymentMethod: Joi.string().valid("pix", "gru").required(),
+      card_number: Joi.number().integer().required(),
+      registry_number: Joi.number().integer().required(),
+      qtd_credits: Joi.number().integer().required(),
+      paymentMethod: Joi.string().valid("pix", "gru").required(),
     });
 
     const { error, warning } = schema.validate(request);

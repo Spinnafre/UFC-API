@@ -1,8 +1,8 @@
 export interface PutCreditsInCardRequestDTO {
-  input_card_number: number;
-  input_registry_number: number;
-  input_qtd_credits: number;
-  input_paymentMethod: string;
+  card_number: number;
+  registry_number: number;
+  qtd_credits: number;
+  paymentMethod: string;
 }
 export interface PutCreditsInCardResponseDTO {
   payment: {

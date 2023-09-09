@@ -8,10 +8,10 @@ import {
 const router = Router();
 
 router.get("/menu", async (req, res) => {
-  const { day } = req.query;
+  const { date } = req.query;
 
   const request = {
-    date: day as string,
+    date: date as string,
   } as const;
 
   const result = await showMenuByDayControllerFactory().handle(request);
@@ -28,6 +28,8 @@ router.get("/getUserBalance", async (req, res) => {
     registry_number: Number(registry_number),
   } as const;
 
+  console.log(request);
+
   const result = await showBalanceByUserControllerFactory().handle(request);
 
   return res.status(result.status).json(result.body);
@@ -38,10 +40,10 @@ router.get("/getPaymentInfo", async (req, res) => {
     req.query;
 
   const request = {
-    input_card_number: Number(card_number),
-    input_registry_number: Number(registry_number),
-    input_qtd_credits: Number(qtd_credits),
-    input_paymentMethod: paymentMethod as string,
+    card_number: Number(card_number),
+    registry_number: Number(registry_number),
+    qtd_credits: Number(qtd_credits),
+    paymentMethod: paymentMethod as string,
   } as const;
 
   const result = await putCreditsInCardControllerFactory().handle(request);

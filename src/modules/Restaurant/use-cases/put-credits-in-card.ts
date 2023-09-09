@@ -19,12 +19,8 @@ export class PutCreditsInCardUseCase {
     request: PutCreditsInCard.Request
   ): Promise<Either<Error | ElementNotFoundError, PutCreditsInCard.Response>> {
     try {
-      const {
-        input_card_number,
-        input_paymentMethod,
-        input_qtd_credits,
-        input_registry_number,
-      } = request;
+      const { card_number, paymentMethod, qtd_credits, registry_number } =
+        request;
 
       await this.scrapper.launch(browserOptions.launchConfig);
 
@@ -59,8 +55,8 @@ export class PutCreditsInCardUseCase {
 
           submitInput && submitInput.click();
         },
-        input_card_number,
-        input_registry_number
+        card_number,
+        registry_number
       );
 
       await this.scrapper.waitForNavigation({
@@ -127,8 +123,8 @@ export class PutCreditsInCardUseCase {
 
           return;
         },
-        Number(input_qtd_credits),
-        Number(input_paymentMethod)
+        Number(qtd_credits),
+        Number(paymentMethod)
       );
 
       await this.scrapper.waitForNavigation({
@@ -232,6 +228,7 @@ export class PutCreditsInCardUseCase {
         return left(new Error("Payment not found"));
       }
 
+      console.log(payment, payerDetails);
       return right({
         payment,
         payerDetails,

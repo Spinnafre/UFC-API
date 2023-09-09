@@ -1,8 +1,8 @@
 export default {
   launchConfig: {
     headless: true,
-    defaultViewport: null,
-    timeout: null,
+    defaultViewport: { width: 640, height: 480 },
+    timeout: 40000,
     waitForInitialPage: true,
     args: [
       "--disable-web-security",

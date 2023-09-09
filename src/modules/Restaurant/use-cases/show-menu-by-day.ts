@@ -14,14 +14,15 @@ export class ShowMenuByDayUseCase {
     this.scrapper = scrapper;
   }
   async execute(
-    day: ShowMenuByDay.Request
+    request: ShowMenuByDay.Request
   ): Promise<Either<Error, ShowMenuByDay.Response>> {
     try {
+      const { date } = request;
       await this.scrapper.launch(browserOptions);
 
       await this.scrapper.openNewTab();
 
-      const url = ShowMenuByDayUseCase.baseUrl + `/${day}`;
+      const url = ShowMenuByDayUseCase.baseUrl + `/${date}`;
 
       await this.scrapper.navigateToUrl(
         url,
@@ -44,42 +45,38 @@ export class ShowMenuByDayUseCase {
 
       Logger.info("Searching by meats");
 
-      const result = typesOfMeats
-        ? typesOfMeats.map(async (typeMeat: string) => {
-            //.refeicao.desjejum > .listras
-            const selector = `.refeicao.${typeMeat} > .listras`;
+      const result = [];
 
-            const meat = await this.scrapper.pageEvaluateWithSelector(
-              (table) => {
-                const removeBlanksLines = (text: string) => {
-                  const allLines = text.split("\n");
-                  return allLines.join(", ");
-                };
+      if (typesOfMeats) {
+        for (let typeMeat of typesOfMeats) {
+          //.refeicao.desjejum > .listras
+          const selector = `.refeicao.${typeMeat} > .listras`;
 
-                const rows = Array.from(table.getElementsByTagName("tr"));
-
-                return rows.map((row) => {
-                  const title = row.firstElementChild?.textContent?.trim();
-
-                  const options = removeBlanksLines(
-                    (<HTMLElement>row?.lastElementChild).innerText.trim()
-                  );
-
-                  return {
-                    title,
-                    options,
-                  };
-                });
-              },
-              selector
-            );
-
-            return {
-              type: typeMeat,
-              meat,
+          const meat = await this.scrapper.pageEvaluateWithSelector((table) => {
+            const removeBlanksLines = (text: string) => {
+              const allLines = text.split("\n");
+              return allLines.join(", ");
             };
-          })
-        : [];
+
+            const rows = Array.from(table.getElementsByTagName("tr"));
+
+            return rows.map((row) => {
+              const title = row.firstElementChild?.textContent?.trim();
+
+              const options = removeBlanksLines(
+                (<HTMLElement>row?.lastElementChild).innerText.trim()
+              );
+
+              return {
+                title: title || "",
+                options,
+              };
+            });
+          }, selector);
+
+          result.push({ type: typeMeat, meat: meat || [] });
+        }
+      }
 
       Logger.info(
         `Successfully to search meats, ${result.length} data loaded.`

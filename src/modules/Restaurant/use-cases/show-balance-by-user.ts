@@ -14,8 +14,8 @@ export class ShowBalanceByUserUseCase {
   }
 
   async execute({
-    input_card_number,
-    input_registry_number,
+    card_number,
+    registry_number,
   }: ShowBalanceByUser.Request): Promise<
     Either<Error, ShowBalanceByUser.Response>
   > {
@@ -39,7 +39,7 @@ export class ShowBalanceByUserUseCase {
         const input = document.querySelector('input[name="codigoCartao"]');
         if (input !== null) (<HTMLInputElement>input).value = `${card_number}`;
         return input;
-      }, Number(input_card_number));
+      }, Number(card_number));
 
       await this.scrapper.pageEvaluate((registry_number: number) => {
         const input = document.querySelector(
@@ -48,7 +48,7 @@ export class ShowBalanceByUserUseCase {
         if (input !== null)
           (<HTMLInputElement>input).value = `${registry_number}`;
         return input;
-      }, Number(input_registry_number));
+      }, Number(registry_number));
 
       await Promise.all([
         this.scrapper.click(
@@ -94,11 +94,14 @@ export class ShowBalanceByUserUseCase {
 
             const removeBlanksLines = (text: string) => {
               const allLines = text.split("\n");
-              const withoutBlankLinesandMarks = allLines.map((line) => {
-                return line.trim();
-              });
+              console.log(allLines);
+              const withoutBlankLinesandMarks = allLines
+                .map((line) => {
+                  return line.trim();
+                })
+                .filter((value) => value);
 
-              return withoutBlankLinesandMarks.join(" ");
+              return withoutBlankLinesandMarks;
             };
             const rows = Array.from(tbody.getElementsByTagName("tr"));
 
@@ -107,7 +110,7 @@ export class ShowBalanceByUserUseCase {
                 const operation_date = row.children[0].textContent;
 
                 const operation_type = row.children[1].textContent
-                  ? removeBlanksLines(row.children[1].textContent)
+                  ? removeBlanksLines(row.children[1].textContent).join("")
                   : null;
 
                 const operation_details = row.children[2].textContent

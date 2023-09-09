@@ -61,6 +61,8 @@ export class ShowHighlightsNewsUseCase {
         content
       );
 
+      console.log(highlightsNews);
+
       if (!highlightsNews.length) {
         Logger.warn(
           `Não foi possível obter notícias em destaques da url : ${this._url}`
@@ -82,14 +84,14 @@ export class ShowHighlightsNewsUseCase {
           const result = items
             .map((item) => {
               //subtitulo
-              const subtitleItem = <HTMLLinkElement>(
+              const subtitleItem = <HTMLParagraphElement>(
                 item.querySelector(".subtitulo")
               );
 
               if (subtitleItem) {
-                const item = subtitleItem.firstElementChild;
+                const link = <HTMLLinkElement>subtitleItem.firstElementChild;
 
-                if (item === null) {
+                if (link === null) {
                   return null;
                 }
 
@@ -98,7 +100,7 @@ export class ShowHighlightsNewsUseCase {
                 );
 
                 //descricao
-                const description = descriptionElement.textContent;
+                const description = descriptionElement?.textContent;
 
                 //img
                 const imageElement = <HTMLImageElement>(
@@ -110,8 +112,8 @@ export class ShowHighlightsNewsUseCase {
                 return {
                   img,
                   title: {
-                    url: subtitleItem.href,
-                    description: subtitleItem.textContent,
+                    url: link?.href,
+                    description: subtitleItem?.textContent,
                   },
                   description,
                 };
@@ -134,7 +136,7 @@ export class ShowHighlightsNewsUseCase {
 
       //Concursos e seleções
       const contestAndSelections = await this.scrapper.elementEvaluate(
-        "#conteudo > div.ten.columns > div:nth-child(2)",
+        "div:nth-child(2)",
         (el) => {
           const links = el.querySelector(".links");
 
@@ -149,7 +151,7 @@ export class ShowHighlightsNewsUseCase {
               const link = <HTMLLinkElement>item.firstElementChild;
 
               if (link) {
-                const description = link.textContent;
+                const description = link;
                 const url = link.href;
 
                 return {

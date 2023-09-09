@@ -1,7 +1,7 @@
 export namespace ShowBalanceByUser {
   export type Request = {
-    input_card_number: number;
-    input_registry_number: number;
+    card_number: number;
+    registry_number: number;
   };
 
   export type Response = {
@@ -12,7 +12,7 @@ export namespace ShowBalanceByUser {
     transactions: Array<{
       date: string | null;
       type: string | null;
-      details: string | null;
+      details: string[] | null;
     }> | null;
   };
 }

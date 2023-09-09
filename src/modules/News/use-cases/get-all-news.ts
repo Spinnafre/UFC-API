@@ -25,7 +25,7 @@ export class ShowNewsUseCase {
 
       Logger.info(this._url + pageNumber);
 
-      await this.scrapper.navigateToUrl(this._url + pageNumber, 15000);
+      await this.scrapper.navigateToUrl(this._url + pageNumber, 25000);
 
       // page.once("load", () => console.log("Página de notícias carregada"));
 

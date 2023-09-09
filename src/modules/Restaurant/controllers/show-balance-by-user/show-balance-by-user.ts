@@ -1,13 +1,17 @@
 import { badRequest, ok } from "../../../../shared/presentation/http-helpers";
 import { HttpResponse } from "../../../../shared/presentation/http-response";
 import { ValidateUserBalanceRequest } from "../../infra/validator/validate-request";
+import { ShowBalanceByUserUseCase } from "../../use-cases/show-balance-by-user";
 import { GetUserBalanceRequestDTO, GetUserBalanceResponseDTO } from "./dto";
 
 export class GetUserBalanceController {
-  private getUserBalance: any;
+  private getUserBalance: ShowBalanceByUserUseCase;
   private validateInput: ValidateUserBalanceRequest;
 
-  constructor(getUserBalance: any, validateInput: ValidateUserBalanceRequest) {
+  constructor(
+    getUserBalance: ShowBalanceByUserUseCase,
+    validateInput: ValidateUserBalanceRequest
+  ) {
     this.getUserBalance = getUserBalance;
     this.validateInput = validateInput;
   }
@@ -21,10 +25,8 @@ export class GetUserBalanceController {
       if (isValidOrError.isLeft()) {
         return badRequest(isValidOrError.value);
       }
-      const result = await this.getUserBalance.execute(
-        request.card_number,
-        request.registry_number
-      );
+
+      const result = await this.getUserBalance.execute(request);
       return ok(result);
     } catch (error) {
       return badRequest(error as Error);
