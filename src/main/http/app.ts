@@ -9,13 +9,13 @@ import { Logger } from "../../shared/infra/logger/logger";
 const app = express();
 app.use(express.json());
 
-setupRoutes(app);
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.use(async (err: any, req: any, res: any, next: any) => {
   await handleError(err, res);
 });
 
+setupRoutes(app);
 // process.on("uncaughtException", (err) => {
 //   handleError(err);
 // });
