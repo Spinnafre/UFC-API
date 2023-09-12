@@ -73,10 +73,8 @@ export class ShowContestsAndSelectionsUseCase {
       const listras = await this.scrapper.getElementHandler(".listras");
 
       if (!listras) {
-        return left(
-          new Error(
-            "Não foi possível carregar notícias de Editar de Concursos e Seleções"
-          )
+        throw new Error(
+          "Não foi possível carregar notícias de Editar de Concursos e Seleções"
         );
       }
 

@@ -1,7 +1,4 @@
-import "dotenv/config";
-
 import { handleError } from "../../shared/errors/handler";
-
 import express from "express";
 import { setupRoutes } from "./routes/setup-routes";
 import { Logger } from "../../shared/infra/logger/logger";

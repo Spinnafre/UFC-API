@@ -3,8 +3,10 @@ import puppeteer, {
   BrowserLaunchArgumentOptions,
   ElementHandle,
   LaunchOptions,
-  SerializableOrJSHandle,
-  WrapElementHandle,
+  Page,
+  Browser,
+  EvaluateFunc,
+  Frame,
 } from "puppeteer";
 
 import { setTimeout } from "node:timers/promises";
@@ -18,8 +20,8 @@ export type launchOptionsParams = LaunchOptions &
 export type ElementHandler = ElementHandle<Element>;
 
 export class PuppeteerAdapter implements Scrapper {
-  private pageHandler: puppeteer.Page | null;
-  private browserInstance: puppeteer.Browser | null;
+  private pageHandler: Page | null;
+  private browserInstance: Browser | null;
 
   private constructor() {
     this.browserInstance = null;
@@ -65,7 +67,7 @@ export class PuppeteerAdapter implements Scrapper {
     );
   }
 
-  async navigateToUrl(url: string, timeout = 30000) {
+  async navigateToUrl(url: string, timeout = 20000) {
     Logger.info(`Navigating to URL ::: ${url}`);
 
     await this.pageHandler?.goto(url, {
@@ -121,7 +123,7 @@ export class PuppeteerAdapter implements Scrapper {
     selector: string,
     command: (element: Element, ...args: unknown[]) => any,
     elementHandler?: any,
-    ...args: SerializableOrJSHandle[]
+    ...args: any[]
   ): Promise<any> {
     const element = elementHandler ? elementHandler : this.pageHandler;
     return await element?.$eval(selector, command, ...args);
@@ -131,7 +133,7 @@ export class PuppeteerAdapter implements Scrapper {
     selector: string,
     command: (element: Element[], ...args: unknown[]) => any,
     elementHandler?: any,
-    ...args: SerializableOrJSHandle[]
+    ...args: any[]
   ): Promise<any> {
     const element = elementHandler ? elementHandler : this.pageHandler;
     return await element?.$$eval(selector, command, ...args);
@@ -140,7 +142,7 @@ export class PuppeteerAdapter implements Scrapper {
   async pageEvaluateWithSelector<T>(
     pageFunction: (element: Element, ...args: unknown[]) => T | Promise<T>,
     selector: string
-  ): Promise<WrapElementHandle<T> | null> {
+  ): Promise<any | null> {
     const data = await this.pageHandler?.$eval(selector, pageFunction);
     if (data) {
       return data;
@@ -148,12 +150,7 @@ export class PuppeteerAdapter implements Scrapper {
     return null;
   }
 
-  async pageEvaluate<T extends puppeteer.EvaluateFn<any>>(
-    pageFunction: any,
-    ...args: puppeteer.SerializableOrJSHandle[]
-  ): Promise<puppeteer.UnwrapPromiseLike<
-    puppeteer.EvaluateFnReturnType<T>
-  > | null> {
+  async pageEvaluate(pageFunction: any, ...args: any[]): Promise<any | null> {
     const data = await this.pageHandler?.evaluate(pageFunction, ...args);
     if (data) {
       return data;
@@ -161,13 +158,11 @@ export class PuppeteerAdapter implements Scrapper {
     return null;
   }
 
-  async pageElementEvaluate<T extends puppeteer.EvaluateFn<any>>(
+  async pageElementEvaluate<T extends EvaluateFunc<any>>(
     pageFunction: T,
     elementHandler: any,
-    ...args: puppeteer.SerializableOrJSHandle[]
-  ): Promise<puppeteer.UnwrapPromiseLike<
-    puppeteer.EvaluateFnReturnType<T>
-  > | null> {
+    ...args: any[]
+  ): Promise<any | null> {
     const data = await elementHandler?.evaluate(pageFunction, ...args);
     if (data) {
       return data;
@@ -203,7 +198,7 @@ export class PuppeteerAdapter implements Scrapper {
 
   async resolveContentFrame(
     elementHandler: ElementHandler
-  ): Promise<puppeteer.Frame | null> {
+  ): Promise<Frame | null> {
     return await elementHandler?.contentFrame();
   }
 

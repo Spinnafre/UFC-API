@@ -1,6 +1,6 @@
 export default {
   launchConfig: {
-    headless: true,
+    headless: "new",
     defaultViewport: { width: 640, height: 480 },
     timeout: 40000,
     waitForInitialPage: true,

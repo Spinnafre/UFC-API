@@ -107,5 +107,9 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "include":["src", "tests", "src/@types","node_modules/@types/puppeteer/index.d.ts"]
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "include":["src", "tests", "src/@types","jest.config.js"]
 }

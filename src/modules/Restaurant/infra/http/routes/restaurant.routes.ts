@@ -1,9 +1,11 @@
+import { GetUserBalanceRequestDTO } from "./../../../controllers/show-balance-by-user/dto";
 import { Router } from "express";
 import {
   showMenuByDayControllerFactory,
   putCreditsInCardControllerFactory,
   showBalanceByUserControllerFactory,
 } from "../../../factories/controllers";
+import { PutCreditsInCardRequestDTO } from "../../../controllers/put-credits-in-card/dto";
 
 const router = Router();
 
@@ -24,11 +26,9 @@ router.get("/getUserBalance", async (req, res) => {
 
   // pass params validations to middleware?
   const request = {
-    card_number: Number(card_number),
-    registry_number: Number(registry_number),
-  } as const;
-
-  console.log(request);
+    card_number: card_number as unknown as number,
+    registry_number: registry_number as unknown as number,
+  } as GetUserBalanceRequestDTO;
 
   const result = await showBalanceByUserControllerFactory().handle(request);
 
@@ -40,11 +40,11 @@ router.get("/getPaymentInfo", async (req, res) => {
     req.query;
 
   const request = {
-    card_number: Number(card_number),
-    registry_number: Number(registry_number),
-    qtd_credits: Number(qtd_credits),
+    card_number: card_number as unknown as number,
+    registry_number: registry_number as unknown as number,
+    qtd_credits: qtd_credits as unknown as number,
     paymentMethod: paymentMethod as string,
-  } as const;
+  } as PutCreditsInCardRequestDTO;
 
   const result = await putCreditsInCardControllerFactory().handle(request);
 

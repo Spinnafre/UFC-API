@@ -26,7 +26,15 @@ export class GetUserBalanceController {
         return badRequest(isValidOrError.value);
       }
 
-      const result = await this.getUserBalance.execute(request);
+      const result = await this.getUserBalance.execute({
+        card_number: request.card_number as number,
+        registry_number: request.registry_number as number,
+      });
+
+      if (result.isLeft()) {
+        return badRequest(result.value);
+      }
+
       return ok(result);
     } catch (error) {
       return badRequest(error as Error);

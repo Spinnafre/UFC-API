@@ -1,5 +1,6 @@
 import pino from "pino";
 import serverConfig from "../../../main/config/server";
+
 export class Logger {
   private static logger = pino({
     level: serverConfig.logsLevels,

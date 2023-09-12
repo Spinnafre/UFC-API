@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import { Logger } from "../../shared/infra/logger/logger";
 import serverConfig from "../config/server";
 import app from "./app";

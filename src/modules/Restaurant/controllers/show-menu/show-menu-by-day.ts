@@ -20,6 +20,9 @@ export class ShowMenuByDayController {
         return badRequest(isValidOrError.value);
       }
       const result = await this.showMenu.execute(request);
+      if (result.isLeft()) {
+        return badRequest(result.value);
+      }
       return ok(result);
     } catch (error) {
       return badRequest(error as Error);

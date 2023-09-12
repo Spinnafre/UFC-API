@@ -75,7 +75,7 @@ export class ShowNewsUseCase {
       const listras = await this.scrapper.getElementHandler(".listras");
 
       if (!listras) {
-        return left(new Error("Não foi possível carregar notícias"));
+        throw new Error("Não foi possível carregar notícias");
       }
 
       const links = await this.scrapper.elementsEvaluate(

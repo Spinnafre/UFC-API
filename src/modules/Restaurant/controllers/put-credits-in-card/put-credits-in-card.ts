@@ -26,7 +26,16 @@ export class PutCreditsInCardController {
         return badRequest(isValidOrError.value);
       }
       // only works with paymentMethod "pix"
-      const result = await this.AddUserCredits.add(request);
+      const result = await this.AddUserCredits.add({
+        card_number: request.card_number as number,
+        paymentMethod: request.paymentMethod as string,
+        qtd_credits: request.qtd_credits as number,
+        registry_number: request.registry_number as number,
+      });
+
+      if (result.isLeft()) {
+        return badRequest(result.value);
+      }
       return ok(result);
     } catch (error) {
       return badRequest(error as Error);

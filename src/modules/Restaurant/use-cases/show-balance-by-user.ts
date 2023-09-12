@@ -29,12 +29,6 @@ export class ShowBalanceByUserUseCase {
         ShowBalanceByUserUseCase.maxPageTimeout
       );
 
-      /** 
-        payload: 
-        codigoCartao: 2887746615
-        matriculaAtreladaCartao: 470605
-      */
-
       await this.scrapper.pageEvaluate((card_number: number) => {
         const input = document.querySelector('input[name="codigoCartao"]');
         if (input !== null) (<HTMLInputElement>input).value = `${card_number}`;
@@ -54,7 +48,10 @@ export class ShowBalanceByUserUseCase {
         this.scrapper.click(
           "#corpo > form > table > tfoot > tr > td > input[type=submit]"
         ),
-        this.scrapper.waitForNavigation({ waitUntil: "networkidle2" }),
+        this.scrapper.waitForNavigation({
+          waitUntil: "networkidle2",
+          timeout: 15000,
+        }),
       ]);
 
       const user_info_page = await this.scrapper.getElementHandler(
@@ -62,7 +59,7 @@ export class ShowBalanceByUserUseCase {
       );
 
       if (!user_info_page) {
-        return left(new Error("Não foi possível buscar usuário"));
+        throw new Error("Não foi possível buscar usuário");
       }
 
       const content = await this.scrapper.waitForElement(

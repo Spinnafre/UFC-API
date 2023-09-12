@@ -29,31 +29,34 @@ export class PutCreditsInCardUseCase {
       //Página inicial
       await this.scrapper.navigateToUrl(this._url, 15000);
 
-      await this.scrapper.waitForElement(".formulario");
+      await this.scrapper.waitForElement(".formulario", 15000);
 
       //Informar dados do cartão e matrícula
       await this.scrapper.pageEvaluate(
         (card_number: number, registry_number: number) => {
           const formInputs = Array.from(document.querySelectorAll("tbody tr"));
-          const card = formInputs[0];
-          const cardInput = card?.lastElementChild
-            ?.firstElementChild as HTMLInputElement;
 
-          cardInput.value = `${card_number}`;
+          if (formInputs.length) {
+            const card = formInputs[0];
+            const cardInput = card?.lastElementChild
+              ?.firstElementChild as HTMLInputElement;
 
-          const registration = formInputs[1];
+            cardInput.value = `${card_number}`;
 
-          const registrationInput = registration?.lastElementChild
-            ?.firstElementChild as HTMLInputElement;
+            const registration = formInputs[1];
 
-          registrationInput.value = `${registry_number}`;
+            const registrationInput = registration?.lastElementChild
+              ?.firstElementChild as HTMLInputElement;
 
-          const submitInput = document
-            .querySelector(".formulario")
-            ?.querySelector("tfoot")
-            ?.querySelector("input");
+            registrationInput.value = `${registry_number}`;
 
-          submitInput && submitInput.click();
+            const submitInput = document
+              .querySelector(".formulario")
+              ?.querySelector("tfoot")
+              ?.querySelector("input");
+
+            submitInput && submitInput.click();
+          }
         },
         card_number,
         registry_number
@@ -61,6 +64,7 @@ export class PutCreditsInCardUseCase {
 
       await this.scrapper.waitForNavigation({
         waitUntil: ["domcontentloaded"],
+        timeout: 10000,
       });
 
       const errorMessageHandle = await this.scrapper.getElementHandler(
@@ -83,7 +87,7 @@ export class PutCreditsInCardUseCase {
         if (errorsMessages) {
           await this.scrapper.closeBrowser();
 
-          return left(new Error(errorsMessages));
+          throw new Error(errorsMessages);
         }
       }
 
@@ -143,7 +147,7 @@ export class PutCreditsInCardUseCase {
       );
 
       if (frameElementHandle === null) {
-        return left(new ElementNotFoundError("frame"));
+        throw new ElementNotFoundError("frame");
       }
       //go into frame in order to input info
       const frame = await this.scrapper.resolveContentFrame(frameElementHandle);
@@ -225,7 +229,7 @@ export class PutCreditsInCardUseCase {
       await this.scrapper.closeBrowser();
 
       if (payment === null) {
-        return left(new Error("Payment not found"));
+        throw new Error("Payment not found");
       }
 
       console.log(payment, payerDetails);

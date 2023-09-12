@@ -61,8 +61,6 @@ export class ShowHighlightsNewsUseCase {
         content
       );
 
-      console.log(highlightsNews);
-
       if (!highlightsNews.length) {
         Logger.warn(
           `Não foi possível obter notícias em destaques da url : ${this._url}`

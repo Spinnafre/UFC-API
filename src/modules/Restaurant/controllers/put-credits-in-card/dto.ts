@@ -1,8 +1,8 @@
 export interface PutCreditsInCardRequestDTO {
-  card_number: number;
-  registry_number: number;
-  qtd_credits: number;
-  paymentMethod: string;
+  card_number: number | null;
+  registry_number: number | null;
+  qtd_credits: number | null;
+  paymentMethod: string | null;
 }
 export interface PutCreditsInCardResponseDTO {
   payment: {
