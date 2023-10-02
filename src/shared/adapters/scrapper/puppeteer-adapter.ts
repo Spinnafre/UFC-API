@@ -7,6 +7,7 @@ import puppeteer, {
   Browser,
   EvaluateFunc,
   Frame,
+  NodeFor,
 } from "puppeteer";
 
 import { setTimeout } from "node:timers/promises";
@@ -139,6 +140,13 @@ export class PuppeteerAdapter implements Scrapper {
     return await element?.$$eval(selector, command, ...args);
   }
 
+  async querySelectorAll<Selector extends string>(
+    selector: Selector
+  ): Promise<Array<ElementHandle<NodeFor<Selector>>> | null> {
+    const data = await this.pageHandler?.$$(selector);
+    return data || null;
+  }
+
   async pageEvaluateWithSelector<T>(
     pageFunction: (element: Element, ...args: unknown[]) => T | Promise<T>,
     selector: string
@@ -162,7 +170,7 @@ export class PuppeteerAdapter implements Scrapper {
     pageFunction: T,
     elementHandler: any,
     ...args: any[]
-  ): Promise<any | null> {
+  ): Promise<any> {
     const data = await elementHandler?.evaluate(pageFunction, ...args);
     if (data) {
       return data;
