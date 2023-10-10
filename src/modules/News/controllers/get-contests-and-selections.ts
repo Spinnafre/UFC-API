@@ -1,11 +1,12 @@
-import { badRequest, ok } from "../../../../shared/presentation/http-helpers";
-import { HttpResponse } from "../../../../shared/presentation/http-response";
-import { ValidateGetContestAndSelectionsRequest } from "../../infra/validator/validate-request";
+import { badRequest, ok } from "../../../shared/presentation/http-helpers";
+import { HttpResponse } from "../../../shared/presentation/http-response";
+import { ValidateGetContestAndSelectionsRequest } from "../infra/validator/validate-request";
 import {
   ShowContestsAndSelectionsRequestDTO,
   ShowContestsAndSelectionsResponseDTO,
-} from "./dto";
-import { ShowContestsAndSelectionsUseCase } from "../../use-cases/get-contests-and-selections";
+} from "./ports/get-contests-and-selections";
+
+import { ShowContestsAndSelectionsUseCase } from "../use-cases/get-contests-and-selections";
 
 export class ShowContestsAndSelectionsController {
   private getContestsAndSelections: ShowContestsAndSelectionsUseCase;

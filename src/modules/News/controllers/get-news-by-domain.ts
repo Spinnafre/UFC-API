@@ -1,8 +1,11 @@
-import { badRequest, ok } from "../../../../shared/presentation/http-helpers";
-import { HttpResponse } from "../../../../shared/presentation/http-response";
-import { ValidateGetNewsByDomainRequest } from "../../infra/validator/validate-request";
-import { ShowAllNewsByDomainUseCase } from "../../use-cases/get-news-by-domain";
-import { GetNewsByDomainRequestDTO, GetNewsByDomainResponseDTO } from "./dto";
+import { badRequest, ok } from "../../../shared/presentation/http-helpers";
+import { HttpResponse } from "../../../shared/presentation/http-response";
+import { ValidateGetNewsByDomainRequest } from "../infra/validator/validate-request";
+import { ShowAllNewsByDomainUseCase } from "../use-cases/get-news-by-domain";
+import {
+  GetNewsByDomainRequestDTO,
+  GetNewsByDomainResponseDTO,
+} from "./ports/get-news-by-domain";
 
 export class GetNewsByDomainController {
   private getAllNewsUseCase: ShowAllNewsByDomainUseCase;

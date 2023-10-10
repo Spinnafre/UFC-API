@@ -1,7 +1,7 @@
-import { badRequest, ok } from "../../../../shared/presentation/http-helpers";
-import { HttpResponse } from "../../../../shared/presentation/http-response";
-import { ShowHighlightsNewsUseCase } from "../../use-cases/get-highlights-news";
-import { GetHighlightsNewsResponseDTO } from "./dto";
+import { badRequest, ok } from "../../../shared/presentation/http-helpers";
+import { HttpResponse } from "../../../shared/presentation/http-response";
+import { ShowHighlightsNewsUseCase } from "../use-cases/get-highlights-news";
+import { GetHighlightsNewsResponseDTO } from "./ports/get-highlights-news";
 
 export class ShowHighlightsNewsController {
   private showHighlightsNewsUseCase: ShowHighlightsNewsUseCase;

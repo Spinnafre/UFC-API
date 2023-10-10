@@ -1,8 +1,9 @@
-import { badRequest, ok } from "../../../../shared/presentation/http-helpers";
-import { HttpResponse } from "../../../../shared/presentation/http-response";
-import { ValidateGetAllNewsRequest } from "../../infra/validator/validate-request";
-import { ShowNewsUseCase } from "../../use-cases/get-all-news";
-import { GetAllNewsRequestDTO } from "./dto";
+import { badRequest, ok } from "../../../shared/presentation/http-helpers";
+import { HttpResponse } from "../../../shared/presentation/http-response";
+import { ValidateGetAllNewsRequest } from "../infra/validator/validate-request";
+import { ShowNewsUseCase } from "../use-cases/get-all-news";
+import { GetAllNewsRequestDTO } from "./ports/get-all-news";
+
 export class ShowNewsController {
   private getNews: ShowNewsUseCase;
   private validateInput: ValidateGetAllNewsRequest;
