@@ -1,4 +1,4 @@
-import { GetUserBalanceController } from "../../controllers/show-balance-by-user/show-balance-by-user";
+import { GetUserBalanceController } from "../../controllers/show-balance-by-user";
 import { ValidateUserBalanceRequest } from "../../infra/validator/validate-request";
 import { showUserBalanceUseCaseFactory } from "../use-cases/show-balance-by-user-factory";
 

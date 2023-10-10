@@ -1,7 +1,7 @@
-import { badRequest, ok } from "../../../../shared/presentation/http-helpers";
-import { HttpResponse } from "../../../../shared/presentation/http-response";
-import { ValidateShowMenuRequest } from "../../infra/validator/validate-request";
-import { ShowMenuRequestDTO, ShowMenuResponseItems } from "./dto";
+import { badRequest, ok } from "../../../shared/presentation/http-helpers";
+import { HttpResponse } from "../../../shared/presentation/http-response";
+import { ValidateShowMenuRequest } from "../infra/validator/validate-request";
+import { ShowMenuRequestDTO, ShowMenuResponseItems } from "./ports/show-menu";
 
 export class ShowMenuByDayController {
   private showMenu: any;

@@ -1,8 +1,11 @@
-import { badRequest, ok } from "../../../../shared/presentation/http-helpers";
-import { HttpResponse } from "../../../../shared/presentation/http-response";
-import { ValidatePutUserCreditsRequest } from "../../infra/validator/validate-request";
-import { PutCreditsInCardUseCase } from "../../use-cases/put-credits-in-card";
-import { PutCreditsInCardRequestDTO, PutCreditsInCardResponseDTO } from "./dto";
+import { badRequest, ok } from "../../../shared/presentation/http-helpers";
+import { HttpResponse } from "../../../shared/presentation/http-response";
+import { ValidatePutUserCreditsRequest } from "../infra/validator/validate-request";
+import { PutCreditsInCardUseCase } from "../use-cases/put-credits-in-card";
+import {
+  PutCreditsInCardRequestDTO,
+  PutCreditsInCardResponseDTO,
+} from "./ports/put-credits-in-card";
 
 export class PutCreditsInCardController {
   private AddUserCredits: PutCreditsInCardUseCase;

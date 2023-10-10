@@ -1,8 +1,11 @@
-import { badRequest, ok } from "../../../../shared/presentation/http-helpers";
-import { HttpResponse } from "../../../../shared/presentation/http-response";
-import { ValidateUserBalanceRequest } from "../../infra/validator/validate-request";
-import { ShowBalanceByUserUseCase } from "../../use-cases/show-balance-by-user";
-import { GetUserBalanceRequestDTO, GetUserBalanceResponseDTO } from "./dto";
+import { badRequest, ok } from "../../../shared/presentation/http-helpers";
+import { HttpResponse } from "../../../shared/presentation/http-response";
+import { ValidateUserBalanceRequest } from "../infra/validator/validate-request";
+import { ShowBalanceByUserUseCase } from "../use-cases/show-balance-by-user";
+import {
+  GetUserBalanceRequestDTO,
+  GetUserBalanceResponseDTO,
+} from "./ports/show-balance-by-user";
 
 export class GetUserBalanceController {
   private getUserBalance: ShowBalanceByUserUseCase;
