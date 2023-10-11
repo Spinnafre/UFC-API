@@ -18,7 +18,7 @@ export namespace GetHighlightsNews {
           description: string;
         }>
       | [];
-    extra:
+    contestsAndSelections:
       | Array<{
           url: string;
           description: string;

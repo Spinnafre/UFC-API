@@ -1,6 +1,6 @@
 import { Either } from "../../../shared/Either";
-import { GetContestAndSelections } from "../domain/use-cases/get-contests-and-selections";
-import { NewsDataMiner } from "../domain/use-cases/news-data-miner-services";
+import { GetContestAndSelections } from "./ports/get-contests-and-selections";
+import { NewsDataMiner } from "./ports/news-data-miner-services";
 
 export class ShowContestsAndSelectionsUseCase {
   private EventsDataMiner: NewsDataMiner.Services;

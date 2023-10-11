@@ -1,6 +1,6 @@
 import { Either } from "../../../shared/Either";
-import { GetAllNews } from "../domain/use-cases/get-all-news";
-import { NewsDataMiner } from "../domain/use-cases/news-data-miner-services";
+import { GetAllNews } from "./ports/get-all-news";
+import { NewsDataMiner } from "./ports/news-data-miner-services";
 
 export class ShowNewsUseCase {
   private EventsDataMiner: NewsDataMiner.Services;

@@ -1,5 +1,6 @@
 import { Either } from "../../../../shared/Either";
-import { NewsEntity } from "../entities/news";
+import { NewsEntity } from "../../domain/entities/news";
+import { GetHighlightsNews } from "./get-highlights-news";
 
 export namespace NewsDataMiner {
   export type PageNumber = number;
@@ -19,6 +20,11 @@ export namespace NewsDataMiner {
       request: GetNewsRequest
     ): Promise<Either<Error, Array<any>>>;
     getNews(request: GetNewsRequest): Promise<Either<Error, Array<NewsEntity>>>;
-    getHighlightsNews(): Promise<Either<Error, Array<NewsEntity>>>;
+    getHighlightsNews(): Promise<Either<Error, GetHighlightsNews.Response>>;
+    getNewsFromDomainPage(request: {
+      pageNumber: number;
+      title: string;
+      domain: string;
+    }): Promise<Either<Error, Array<NewsEntity>>>;
   }
 }

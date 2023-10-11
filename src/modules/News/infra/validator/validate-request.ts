@@ -1,9 +1,9 @@
 import Joi from "joi";
 import { Either, left, right } from "../../../../shared/Either";
 import { validateInput } from "../../../../shared/input-validator";
-import { GetAllNewsRequestDTO } from "../../controllers/gel-all-news/dto";
-import { ShowContestsAndSelectionsRequestDTO } from "../../controllers/get-contests-and-selections/dto";
-import { GetNewsByDomainRequestDTO } from "../../controllers/get-news-by-domain/dto";
+import { GetAllNewsRequestDTO } from "../../controllers/ports/get-all-news";
+import { ShowContestsAndSelectionsRequestDTO } from "../../controllers/ports/get-contests-and-selections";
+import { GetNewsByDomainRequestDTO } from "../../controllers/ports/get-news-by-domain";
 import { Logger } from "../../../../shared/infra/logger/logger";
 export class ValidateGetAllNewsRequest
   implements
