@@ -319,7 +319,7 @@ export class NewsServices implements NewsDataMiner.Services {
 
       if (!contestAndSelections.length) {
         Logger.warn(
-          `Não foi possível obter notícias de concursos e seleçoes em destaques da url : ${this.baseUrl}`
+          `Não foi possível obter notícias de concursos e seleções em destaques da url : ${this.baseUrl}`
         );
       }
 
@@ -360,23 +360,6 @@ export class NewsServices implements NewsDataMiner.Services {
       Logger.info(`Getting data from ${url}...`);
 
       await this.scrapper.navigateToUrl(url, timeout);
-
-      //Se passar title significa que irá pesquisar apenas por título
-      //evaluateHandle => Melhor forma e mais segura de recuperar elementos da DOM
-      /*if (title) {
-                      //#limit -> botão select de quantidade de dados que irá ser exibido
-                      await page.waitForSelector(".ufc") //Formulário com filtros de título 
-      
-                      await page.evaluate((text) => {
-                          document.querySelector("#s").value = text
-                          //Chama o evento de submit
-                          document.querySelector("#searchform").submit()
-                      }, title)
-                      //Espera a página recarregar pois ao fazer o submit irá recarregar a página
-                      await page.waitForNavigation({ timeout: 5000, waitUntil: ['domcontentloaded'] })
-                  }*/
-
-      // await page.waitForSelector(".sector")
 
       const news = await this.scrapper.elementEvaluate(
         ".setor section",

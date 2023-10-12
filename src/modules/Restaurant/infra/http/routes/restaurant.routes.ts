@@ -1,11 +1,14 @@
-import { GetUserBalanceRequestDTO } from "./../../../controllers/show-balance-by-user/dto";
 import { Router } from "express";
 import {
   showMenuByDayControllerFactory,
   putCreditsInCardControllerFactory,
   showBalanceByUserControllerFactory,
 } from "../../../factories/controllers";
-import { PutCreditsInCardRequestDTO } from "../../../controllers/put-credits-in-card/dto";
+
+import {
+  GetUserBalanceRequestDTO,
+  PutCreditsInCardRequestDTO,
+} from "../../../controllers/ports";
 
 const router = Router();
 

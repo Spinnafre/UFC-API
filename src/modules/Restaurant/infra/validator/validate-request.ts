@@ -1,11 +1,13 @@
 import Joi from "joi";
 
-import { GetUserBalanceRequestDTO } from "../../controllers/show-balance-by-user/dto";
 import { Either, left, right } from "../../../../shared/Either";
 import { validateInput } from "../../../../shared/input-validator";
-import { PutCreditsInCardRequestDTO } from "../../controllers/put-credits-in-card/dto";
-import { ShowMenuRequestDTO } from "../../controllers/show-menu/dto";
 import { Logger } from "../../../../shared/infra/logger/logger";
+import {
+  GetUserBalanceRequestDTO,
+  PutCreditsInCardRequestDTO,
+  ShowMenuRequestDTO,
+} from "../../controllers/ports";
 
 export class ValidateUserBalanceRequest
   implements
