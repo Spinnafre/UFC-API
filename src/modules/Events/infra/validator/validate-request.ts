@@ -10,7 +10,6 @@ export class ValidateGetEventsRequest
   validate(
     request: GetEventControllerDTO.Request
   ): Either<Joi.ValidationError, GetEventControllerDTO.Request> {
-    console.log("REQ ", request);
     const schema =
       typeof request === "number"
         ? {
