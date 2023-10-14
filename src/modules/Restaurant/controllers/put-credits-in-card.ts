@@ -29,7 +29,7 @@ export class PutCreditsInCardController {
         return badRequest(isValidOrError.value);
       }
       // only works with paymentMethod "pix"
-      const result = await this.AddUserCredits.add({
+      const result = await this.AddUserCredits.execute({
         card_number: request.card_number as number,
         paymentMethod: request.paymentMethod as string,
         qtd_credits: request.qtd_credits as number,
