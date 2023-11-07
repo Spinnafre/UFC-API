@@ -1,4 +1,4 @@
-import browserOptions from "../../../../main/config/puppeteer";
+import { puppeterrConfig } from "../../../../main/config/puppeteer";
 import { Either, left, right } from "../../../../shared/Either";
 import { PuppeteerAdapter } from "../../../../shared/adapters/scrapper/puppeteer-adapter";
 import { Logger } from "../../../../shared/infra/logger/logger";
@@ -26,7 +26,7 @@ export class NewsServices implements NewsDataMiner.Services {
     name?: string
   ): Promise<Either<Error, Array<NewsEntity>>> {
     try {
-      await this.scrapper.launch(browserOptions.launchConfig);
+      await this.scrapper.launch(puppeterrConfig.launchConfig);
 
       await this.scrapper.openNewTab();
 
@@ -148,7 +148,7 @@ export class NewsServices implements NewsDataMiner.Services {
     Either<Error, GetHighlightsNews.Response>
   > {
     try {
-      await this.scrapper.launch(browserOptions.launchConfig);
+      await this.scrapper.launch(puppeterrConfig.launchConfig);
 
       await this.scrapper.openNewTab();
 
@@ -353,7 +353,7 @@ export class NewsServices implements NewsDataMiner.Services {
     const timeout = 25000;
 
     try {
-      await this.scrapper.launch(browserOptions.launchConfig);
+      await this.scrapper.launch(puppeterrConfig.launchConfig);
 
       await this.scrapper.openNewTab();
 

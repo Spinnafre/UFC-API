@@ -10,18 +10,18 @@ export class ValidateGetEventsRequest
   validate(
     request: GetEventControllerDTO.Request
   ): Either<Joi.ValidationError, GetEventControllerDTO.Request> {
+    // TO-DO : Create campus, category and area lists
     const schema =
       typeof request === "number"
         ? {
             pageNumber: Joi.number().integer().required(),
           }
         : {
-            date: Joi.string().required(),
-            day: Joi.string().required(),
-            keyWord: Joi.string().required(),
-            campus: Joi.string().required(),
-            category: Joi.string().required(),
-            area: Joi.string().required(),
+            date: Joi.string().allow(""),
+            keyWord: Joi.string().allow(""),
+            campus: Joi.string().allow(""),
+            category: Joi.string().allow(""),
+            area: Joi.string().allow(""),
           };
 
     const { error, warning } = Joi.object(schema).validate(request);

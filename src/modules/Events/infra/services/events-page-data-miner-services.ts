@@ -1,4 +1,4 @@
-import browserOptions from "../../../../main/config/puppeteer";
+import { puppeterrConfig } from "../../../../main/config/puppeteer";
 import { Either, left, right } from "../../../../shared/Either";
 import { Logger } from "../../../../shared/infra/logger/logger";
 import { PuppeteerAdapter } from "../../../../shared/adapters/scrapper/puppeteer-adapter";
@@ -26,12 +26,12 @@ export class EventsServices implements EventsDataMiner.Services {
       );
     }
 
-    const { area, campus, category, date, day, keyWord } = request;
+    const { area, campus, category, date, keyWord } = request;
 
     return (
       this.baseUrl +
       this.eventListPath +
-      `?tribe-bar-date=${date}&tribe-bar-date-day=${day}&tribe-bar-search=${keyWord}&tribe-bar-campus=${campus}&tribe-bar-categoria=${category}&tribe-bar-area=${area}`
+      `?tribe-bar-date=${date}&tribe-bar-date-day=&tribe-bar-search=${keyWord}&tribe-bar-campus=${campus}&tribe-bar-categoria=${category}&tribe-bar-area=${area}`
     );
   }
 
@@ -39,7 +39,7 @@ export class EventsServices implements EventsDataMiner.Services {
     eventAreaSelector: string
   ): Promise<Either<Error, Array<EventEntity>>> {
     try {
-      await this.scrapper.launch(browserOptions.launchConfig);
+      await this.scrapper.launch(puppeterrConfig.launchConfig);
 
       await this.scrapper.openNewTab();
 
@@ -225,7 +225,7 @@ export class EventsServices implements EventsDataMiner.Services {
     try {
       Logger.info(`Iniciando busca de evento pela a url ${url}`);
 
-      await this.scrapper.launch(browserOptions.launchConfig);
+      await this.scrapper.launch(puppeterrConfig.launchConfig);
 
       await this.scrapper.openNewTab();
 

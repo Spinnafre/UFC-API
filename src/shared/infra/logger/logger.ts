@@ -1,5 +1,5 @@
 import pino from "pino";
-import serverConfig from "../../../main/config/server";
+import { serverConfig } from "../../../main/config";
 
 export class Logger {
   private static logger = pino({

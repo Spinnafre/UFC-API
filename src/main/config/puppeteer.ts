@@ -1,4 +1,4 @@
-export default {
+export const puppeterrConfig = {
   launchConfig: {
     headless: "new",
     defaultViewport: { width: 640, height: 480 },

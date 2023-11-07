@@ -6,7 +6,6 @@ export namespace EventsDataMiner {
 
   export type EventQueryParams = {
     date: string;
-    day: string;
     keyWord: string;
     campus: string;
     category: string;

@@ -1,7 +1,7 @@
 import { Either, left, right } from "../../../../shared/Either";
 import { PuppeteerAdapter } from "../../../../shared/adapters/scrapper/puppeteer-adapter";
 import { Logger } from "../../../../shared/infra/logger/logger";
-import browserOptions from "../../../../main/config/puppeteer";
+import { puppeterrConfig } from "../../../../main/config";
 import {
   ShowMenuByDay,
   PutCreditsInCard,
@@ -31,7 +31,7 @@ export class RestaurantServices implements RestaurantDataMiner.Services {
     try {
       const baseURL = this.baseUrl.menu + `/${date}`;
 
-      await this.scrapper.launch(browserOptions);
+      await this.scrapper.launch(puppeterrConfig.launchConfig);
 
       await this.scrapper.openNewTab();
 
@@ -109,7 +109,7 @@ export class RestaurantServices implements RestaurantDataMiner.Services {
     Either<Error, ShowBalanceByUser.Response>
   > {
     try {
-      await this.scrapper.launch(browserOptions);
+      await this.scrapper.launch(puppeterrConfig.launchConfig);
 
       await this.scrapper.openNewTab();
 
@@ -243,7 +243,7 @@ export class RestaurantServices implements RestaurantDataMiner.Services {
     Either<Error | ElementNotFoundError, PutCreditsInCard.Response>
   > {
     try {
-      await this.scrapper.launch(browserOptions.launchConfig);
+      await this.scrapper.launch(puppeterrConfig.launchConfig);
 
       await this.scrapper.openNewTab();
 

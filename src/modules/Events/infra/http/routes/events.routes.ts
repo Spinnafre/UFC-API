@@ -35,11 +35,11 @@ router.get("/", async (req, res, next) => {
   } else {
     const { keyWord, date, campus, category, area } = req.query;
     dto = {
-      date,
-      keyWord,
-      campus,
-      category,
-      area,
+      date: date || "",
+      keyWord: keyWord || "",
+      campus: campus || "",
+      category: category || "",
+      area: area || "",
     } as GetEventControllerDTO.Request;
   }
 

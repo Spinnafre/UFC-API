@@ -1,8 +1,8 @@
 import { Express } from "express";
 
+import events from "../../../modules/Events/infra/http/routes/events.routes";
 import news from "../../../modules/News/infra/http/routes/news.routes";
 import restaurant from "../../../modules/Restaurant/infra/http/routes/restaurant.routes";
-import events from "../../../modules/Events/infra/http/routes/events.routes";
 
 export function setupRoutes(app: Express): void {
   app.get("/ping", (req, res) => {
