@@ -20,6 +20,7 @@ export class ShowHighlightsNewsController {
 
       return ok(result);
     } catch (error) {
+      console.error(error);
       return badRequest(error as Error);
     }
   }

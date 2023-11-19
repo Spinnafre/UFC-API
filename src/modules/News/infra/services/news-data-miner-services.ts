@@ -323,7 +323,7 @@ export class NewsServices implements NewsDataMiner.Services {
         );
       }
 
-      await this.scrapper.closeBrowser();
+      await this.scrapper.closePage();
 
       return right({
         highlight: highlightsNews,
@@ -331,9 +331,10 @@ export class NewsServices implements NewsDataMiner.Services {
         contestsAndSelections: contestAndSelections,
       });
     } catch (error) {
+      console.error(error);
       Logger.error(error);
 
-      await this.scrapper.closeBrowser();
+      await this.scrapper.closePage();
 
       return left(error as Error);
     }
