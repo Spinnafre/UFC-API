@@ -8,7 +8,7 @@
     "start": "node src/shared/infra/http/server.js",
     "dev": "nodemon",
     "test": "jest --watchAll --runInBand",
-    "load-test:local":"artillery run -e load tests/api_load.yml"
+    "load-test:local":"artillery run -e load tests/load/api_load.yml"
   },
   "repository": {
     "type": "git",

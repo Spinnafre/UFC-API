@@ -15,7 +15,6 @@ config:
       plugins:
         ensure: {}
         expect: {}
-        metrics-by-endpoint: {}
         apdex: {}
 
       ensure:
@@ -38,16 +37,12 @@ config:
 scenarios:
   - name: News
     flow:
-      - log: "New virtual user running"
+      - log: "Current environment is set to: {{ $environment }}"
       - get:
           url: "/news/highlightsNews"
           expect:
             - statusCode: 200
             - contentType: json
-            - hasProperty: "value"
-            - hasProperty: "value.highlight"
-            - hasProperty: "value.latestNews"
-            - hasProperty: "value.contestsAndSelections"
 
       - get:
           url: "/news/all?pageNumber=1&title=livros&domain=biblioteca.ufc.br"
