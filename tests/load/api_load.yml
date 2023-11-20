@@ -1,0 +1,84 @@
+config:
+  environments:
+    load:
+      target: http://localhost:3333/api/v1
+      phases:
+        - duration: 4
+          arrivalRate: 1
+          maxVusers: 1
+          name: Startup phase
+        # - duration: 10
+        #   arrivalRate: 1
+        #   maxVusers: 1
+        #   name: Slow-down phase
+
+      plugins:
+        ensure: {}
+        expect: {}
+        apdex: {}
+
+      ensure:
+        thresholds:
+          - http.response_time.max: 50000
+
+    functional:
+      target: http://localhost:3333/api/v1
+      phases:
+        - duration: 10
+          arrivalRate: 2
+      plugins:
+        ensure: {}
+        expect: {}
+
+      ensure:
+        thresholds:
+          - http.response_time.max: 2000
+
+scenarios:
+  - name: News
+    flow:
+      - log: "Current environment is set to: {{ $environment }}"
+      - get:
+          url: "/news/highlightsNews"
+          expect:
+            - statusCode: 200
+            - contentType: json
+
+      - get:
+          url: "/news/all?pageNumber=1&title=livros&domain=biblioteca.ufc.br"
+          expect:
+            - statusCode: 200
+            - contentType: json
+
+      - get:
+          url: "/news?pageNumber=1&title=projetos"
+          expect:
+            - statusCode: 200
+            - contentType: json
+
+      - get:
+          url: "/news/contestsAndSelections?pageNumber=1&title=bolsa"
+          expect:
+            - statusCode: 200
+            - contentType: json
+
+      # - get:
+      #     url: "/events"
+      #     expect:
+      #       - statusCode: 200
+      #       - contentType: json
+      - get:
+          url: "/events/highlights"
+          expect:
+            - statusCode: 200
+            - contentType: json
+      - get:
+          url: "/events/upcoming"
+          expect:
+            - statusCode: 200
+            - contentType: json
+      - get:
+          url: "/restaurant/menu?date=2023-09-05"
+          expect:
+            - statusCode: 200
+            - contentType: json

@@ -4,7 +4,7 @@ const options = {
   timeout: 2000,
   host: "localhost",
   port: process.env.PORT || 80,
-  path: "/_health",
+  path: "/ping",
   method: "GET",
 };
 
