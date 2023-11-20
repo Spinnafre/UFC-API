@@ -1,7 +1,7 @@
 config:
   environments:
     load:
-      target: http://localhost:80/api/v1
+      target: http://localhost:3333/api/v1
       phases:
         - duration: 4
           arrivalRate: 1
@@ -22,7 +22,7 @@ config:
           - http.response_time.max: 50000
 
     functional:
-      target: http://localhost:80/api/v1
+      target: http://localhost:3333/api/v1
       phases:
         - duration: 10
           arrivalRate: 2

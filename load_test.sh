@@ -20,7 +20,7 @@ if [[ ! -n $PORT ]]; then
     exit 1
 fi
 
-logger "INFO" "checking if server is running..."
+logger "INFO" "checking if server is running in port $PORT..."
 
 serverIsListening=$(ss -tulwn | grep ":${PORT}" &>/dev/null && echo true || echo false)
 

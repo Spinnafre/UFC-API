@@ -1,23 +1,21 @@
 # syntax=docker/dockerfile:1.4
 
-FROM node:18-bullseye-slim AS build
+FROM node:21-bullseye AS building
 
 RUN apt-get update && apt-get install -y --no-install-recommends dumb-init
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
-
 COPY . /usr/src/app
 
-# RUN npm run build
+RUN npm install 
 
-# RUN rm -rf node_modules
+RUN npm run build
 
-RUN npm ci --only=production
+RUN rm -rf node_modules
 
 # Final stage
-FROM node:18-bullseye-slim AS final
+FROM node:21-bullseye  AS final
 
 LABEL mode="production"
 
@@ -26,29 +24,45 @@ WORKDIR /usr/src/app
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
-RUN apt-get update && apt-get install gnupg wget -y && \
-    wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
-    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
-    apt-get update && \
-    apt-get install google-chrome-stable -y --no-install-recommends && \
-    rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get upgrade -y
+
+RUN apt-get update \
+    && apt-get install -y wget gnupg \
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg \
+    && sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-khmeros fonts-kacst fonts-freefont-ttf libxss1 dbus dbus-x11 \
+    --no-install-recommends \
+    && service dbus start \
+    && rm -rf /var/lib/apt/lists/*
 
 ARG NODE_ENV=production
 ENV NODE_ENV $NODE_ENV
+ENV LOG_ENABLED true
+
+
+COPY --from=building /usr/bin/dumb-init /usr/bin/dumb-init
+
+# USER node
+
+# COPY --from=build --chown=node:node /usr/src/app/node_modules node_modules
+# COPY --from=build --chown=node:node /usr/src/app/dist dist
+
+COPY --from=building /usr/src/app/dist /usr/src/app/dist/
+
+COPY --from=building [\
+    "/usr/src/app/package.json", \
+    "/usr/src/app/package-lock.json", \
+    "/usr/src/app/" \
+    ]
+
+RUN npm install --omit=dev
 
 ARG PORT=80
 ENV PORT $PORT
 EXPOSE $PORT
-
-USER node
-
-COPY --from=build /usr/bin/dumb-init /usr/bin/dumb-init
-
-COPY --from=build --chown=node:node /usr/src/app/node_modules node_modules
-# COPY --from=build --chown=node:node /usr/src/app/dist dist
-COPY --chown=node:node . /usr/src/app
-
-HEALTHCHECK --interval=30s --timeout=12s --start-period=30s \
+# /usr/src/app/dist/src/main/http/server.js
+HEALTHCHECK --interval=60s --timeout=12s --start-period=30s \
     CMD node healthcheck.js
 
-CMD node src/main/http/server.ts
+CMD ["dumb-init", "node", "./dist/src/main/http/server.js"]

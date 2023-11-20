@@ -1,5 +1,13 @@
 version: '3'
 services:
+  api-ufc:
+    build: .
+    container_name: "api-ufc"
+    ports:
+      - "3333:80"
+    restart: unless-stopped
+    networks:
+      - private
   # api-ufc:
   #   build: .
   #   container_name: "api-ufc"
@@ -7,15 +15,10 @@ services:
   #     - ./:/usr/src/app
   #     - nodemodules_api:/usr/src/app/node_modules
   #   ports:
-  #     - "80:80"
+  #     - "3333:80"
   #   restart: on-failure
   #   networks:
   #     - private
-  redis:
-    container_name: api-ufc-redis
-    image: redis:latest
-    ports:
-      - 6379:6379
 
 volumes:
   nodemodules: {}
